@@ -194,6 +194,268 @@ def generate_recommendations(attendance, internal_marks, study_hours, absences, 
 
     return recs
 
+def evaluate_tree_path(student_id, attendance, study_hours, internal_marks, previous_grade, absences):
+    student_id = str(student_id or 'STU-1001').strip()
+    attendance = float(attendance)
+    study_hours = float(study_hours)
+    internal_marks = float(internal_marks)
+    previous_grade = str(previous_grade or 'B').strip().upper()
+    absences = int(absences)
+
+    active_ids = ['node-0']
+    decision_steps = []
+
+    if attendance <= 80.0:
+        decision_steps.append({
+            'step': 1,
+            'node_id': 'node-0',
+            'node_name': 'Attendance Split',
+            'type': 'split',
+            'feature': 'Attendance Rate (%)',
+            'decision_detail': f'Attendance ({attendance}%) ≤ 80.0% ➔ Branching LEFT (Low Attendance)'
+        })
+        active_ids.append('node-1')
+
+        if internal_marks <= 22.0:
+            decision_steps.append({
+                'step': 2,
+                'node_id': 'node-1',
+                'node_name': 'Low Attendance Internal Split',
+                'type': 'split',
+                'feature': 'Internal Assessment Marks (0-50)',
+                'decision_detail': f'Internal Marks ({internal_marks}/50) ≤ 22.0/50 ➔ Branching LEFT (High Risk)'
+            })
+            active_ids.append('node-3')
+            decision_steps.append({
+                'step': 3,
+                'node_id': 'node-3',
+                'node_name': 'High Academic Risk Leaf',
+                'type': 'leaf',
+                'outcome': 'Fail',
+                'confidence': 92.3,
+                'explanation': 'Low attendance (≤80%) & low internal assessment marks (≤22/50) result in a 92.3% failure probability.'
+            })
+        else:
+            decision_steps.append({
+                'step': 2,
+                'node_id': 'node-1',
+                'node_name': 'Low Attendance Internal Split',
+                'type': 'split',
+                'feature': 'Internal Assessment Marks (0-50)',
+                'decision_detail': f'Internal Marks ({internal_marks}/50) > 22.0/50 ➔ Branching RIGHT (Evaluate Study Hours)'
+            })
+            active_ids.append('node-4')
+
+            if study_hours <= 9.0:
+                decision_steps.append({
+                    'step': 3,
+                    'node_id': 'node-4',
+                    'node_name': 'Low Attendance Study Time Split',
+                    'type': 'split',
+                    'feature': 'Weekly Study Hours',
+                    'decision_detail': f'Study Hours ({study_hours} h/wk) ≤ 9.0 h/wk ➔ Branching LEFT (Study Deficit)'
+                })
+                active_ids.append('node-9')
+                decision_steps.append({
+                    'step': 4,
+                    'node_id': 'node-9',
+                    'node_name': 'Study Deficit Leaf',
+                    'type': 'leaf',
+                    'outcome': 'Fail',
+                    'confidence': 75.0,
+                    'explanation': 'Low attendance (≤80%) combined with insufficient study hours (≤9h) leads to academic failure.'
+                })
+            else:
+                decision_steps.append({
+                    'step': 3,
+                    'node_id': 'node-4',
+                    'node_name': 'Low Attendance Study Time Split',
+                    'type': 'split',
+                    'feature': 'Weekly Study Hours',
+                    'decision_detail': f'Study Hours ({study_hours} h/wk) > 9.0 h/wk ➔ Branching RIGHT (Study Recovery)'
+                })
+                active_ids.append('node-10')
+                decision_steps.append({
+                    'step': 4,
+                    'node_id': 'node-10',
+                    'node_name': 'Study Effort Recovery Leaf',
+                    'type': 'leaf',
+                    'outcome': 'Pass',
+                    'confidence': 89.5,
+                    'explanation': 'High study hours (>9h) and decent internal marks compensate for low attendance.'
+                })
+    else:
+        decision_steps.append({
+            'step': 1,
+            'node_id': 'node-0',
+            'node_name': 'Attendance Split',
+            'type': 'split',
+            'feature': 'Attendance Rate (%)',
+            'decision_detail': f'Attendance ({attendance}%) > 80.0% ➔ Branching RIGHT (Sufficient Attendance)'
+        })
+        active_ids.append('node-2')
+
+        if internal_marks <= 28.0:
+            decision_steps.append({
+                'step': 2,
+                'node_id': 'node-2',
+                'node_name': 'Good Attendance Internal Split',
+                'type': 'split',
+                'feature': 'Internal Assessment Marks (0-50)',
+                'decision_detail': f'Internal Marks ({internal_marks}/50) ≤ 28.0/50 ➔ Branching LEFT (Evaluate Absences)'
+            })
+            active_ids.append('node-5')
+
+            if absences > 6:
+                decision_steps.append({
+                    'step': 3,
+                    'node_id': 'node-5',
+                    'node_name': 'Absences Split',
+                    'type': 'split',
+                    'feature': 'Unexcused Absences',
+                    'decision_detail': f'Absences ({absences} days) > 6 days ➔ Branching RIGHT (High Absences Risk)'
+                })
+                active_ids.append('node-12')
+                decision_steps.append({
+                    'step': 4,
+                    'node_id': 'node-12',
+                    'node_name': 'High Absences Risk Leaf',
+                    'type': 'leaf',
+                    'outcome': 'Fail',
+                    'confidence': 60.0,
+                    'explanation': 'High absences (>6 days) impair learning continuity despite good class attendance.'
+                })
+            else:
+                decision_steps.append({
+                    'step': 3,
+                    'node_id': 'node-5',
+                    'node_name': 'Absences Split',
+                    'type': 'split',
+                    'feature': 'Unexcused Absences',
+                    'decision_detail': f'Absences ({absences} days) ≤ 6 days ➔ Branching LEFT (Evaluate Study Hours)'
+                })
+                active_ids.append('node-11')
+
+                if study_hours <= 7.5:
+                    decision_steps.append({
+                        'step': 4,
+                        'node_id': 'node-11',
+                        'node_name': 'Study Hours Evaluation',
+                        'type': 'split',
+                        'feature': 'Weekly Study Hours',
+                        'decision_detail': f'Study Hours ({study_hours} h/wk) ≤ 7.5 h/wk ➔ Branching LEFT (Moderate Risk)'
+                    })
+                    active_ids.append('node-17')
+                    decision_steps.append({
+                        'step': 5,
+                        'node_id': 'node-17',
+                        'node_name': 'Moderate Risk Leaf',
+                        'type': 'leaf',
+                        'outcome': 'Fail',
+                        'confidence': 70.0,
+                        'explanation': 'Moderate internal marks with low study hours (≤7.5h) lead to academic fail risk.'
+                    })
+                else:
+                    decision_steps.append({
+                        'step': 4,
+                        'node_id': 'node-11',
+                        'node_name': 'Study Hours Evaluation',
+                        'type': 'split',
+                        'feature': 'Weekly Study Hours',
+                        'decision_detail': f'Study Hours ({study_hours} h/wk) > 7.5 h/wk ➔ Branching RIGHT (Consistent Effort)'
+                    })
+                    active_ids.append('node-18')
+                    decision_steps.append({
+                        'step': 5,
+                        'node_id': 'node-18',
+                        'node_name': 'Consistent Effort Leaf',
+                        'type': 'leaf',
+                        'outcome': 'Pass',
+                        'confidence': 97.8,
+                        'explanation': 'Good attendance and steady study effort yield a 97.8% pass rate.'
+                    })
+        else:
+            decision_steps.append({
+                'step': 2,
+                'node_id': 'node-2',
+                'node_name': 'Good Attendance Internal Split',
+                'type': 'split',
+                'feature': 'Internal Assessment Marks (0-50)',
+                'decision_detail': f'Internal Marks ({internal_marks}/50) > 28.0/50 ➔ Branching RIGHT (Evaluate Previous Grade)'
+            })
+            active_ids.append('node-6')
+
+            if previous_grade in ['D', 'F']:
+                decision_steps.append({
+                    'step': 3,
+                    'node_id': 'node-6',
+                    'node_name': 'Previous Academic Grade Split',
+                    'type': 'split',
+                    'feature': 'Previous Academic Standing',
+                    'decision_detail': f'Previous Grade ({previous_grade}) is in {{D, F}} ➔ Branching LEFT (Prior Weakness)'
+                })
+                active_ids.append('node-13')
+
+                if study_hours <= 8.0:
+                    decision_steps.append({
+                        'step': 4,
+                        'node_id': 'node-13',
+                        'node_name': 'Prior Weakness Study Split',
+                        'type': 'split',
+                        'feature': 'Weekly Study Hours',
+                        'decision_detail': f'Study Hours ({study_hours} h/wk) ≤ 8.0 h/wk ➔ Branching LEFT (Unaddressed Weakness)'
+                    })
+                    active_ids.append('node-19')
+                    decision_steps.append({
+                        'step': 5,
+                        'node_id': 'node-19',
+                        'node_name': 'Unaddressed Past Weakness Leaf',
+                        'type': 'leaf',
+                        'outcome': 'Fail',
+                        'confidence': 75.0,
+                        'explanation': 'Prior low grade (D/F) without increased study hours (≤8h) results in failure.'
+                    })
+                else:
+                    decision_steps.append({
+                        'step': 4,
+                        'node_id': 'node-13',
+                        'node_name': 'Prior Weakness Study Split',
+                        'type': 'split',
+                        'feature': 'Weekly Study Hours',
+                        'decision_detail': f'Study Hours ({study_hours} h/wk) > 8.0 h/wk ➔ Branching RIGHT (Academic Recovery)'
+                    })
+                    active_ids.append('node-20')
+                    decision_steps.append({
+                        'step': 5,
+                        'node_id': 'node-20',
+                        'node_name': 'Academic Recovery Leaf',
+                        'type': 'leaf',
+                        'outcome': 'Pass',
+                        'confidence': 80.0,
+                        'explanation': 'Overcame past low grade standing through strong internal marks and high study effort.'
+                    })
+            else:
+                decision_steps.append({
+                    'step': 3,
+                    'node_id': 'node-6',
+                    'node_name': 'Previous Academic Grade Split',
+                    'type': 'split',
+                    'feature': 'Previous Academic Standing',
+                    'decision_detail': f'Previous Grade ({previous_grade}) is in {{A, B, C}} ➔ Branching RIGHT (High Performer)'
+                })
+                active_ids.append('node-14')
+                decision_steps.append({
+                    'step': 4,
+                    'node_id': 'node-14',
+                    'node_name': 'High Academic Standing Leaf',
+                    'type': 'leaf',
+                    'outcome': 'Pass',
+                    'confidence': 97.8,
+                    'explanation': 'Optimal academic profile: Strong attendance, high internal marks (>28/50), and past grade A/B/C.'
+                })
+
+    return active_ids, decision_steps
+
 def predict_student_outcome(input_data, model_path='model.pkl'):
     """
     Evaluates student feature payload, predicts Pass/Fail with calibrated confidence,
@@ -206,6 +468,7 @@ def predict_student_outcome(input_data, model_path='model.pkl'):
     calibrated_model = artifact['model']
 
     # Extract input fields
+    student_id = str(input_data.get('student_id', 'STU-1001') or 'STU-1001').strip()
     gender = input_data.get('gender', 'Male')
     age = int(input_data.get('age', 20))
     attendance = float(input_data.get('attendance', 80.0))
@@ -246,10 +509,15 @@ def predict_student_outcome(input_data, model_path='model.pkl'):
     # Generate Heuristic Recommendations
     recommendations = generate_recommendations(attendance, internal_marks, study_hours, absences, previous_grade)
 
+    # Evaluate decision steps
+    active_ids, decision_steps = evaluate_tree_path(student_id, attendance, study_hours, internal_marks, previous_grade, absences)
+
     result_dict = {
         'id': f"PRED-{int(datetime.now().timestamp())}",
+        'student_id': student_id,
         'timestamp': datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
         'inputs': {
+            'student_id': student_id,
             'gender': gender,
             'age': age,
             'attendance': attendance,
@@ -262,7 +530,8 @@ def predict_student_outcome(input_data, model_path='model.pkl'):
         'confidence': confidence,
         'pass_probability': pass_prob,
         'fail_probability': fail_prob,
-        'recommendations': recommendations
+        'recommendations': recommendations,
+        'decision_steps': decision_steps
     }
 
     # Save to prediction transaction log

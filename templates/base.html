@@ -35,6 +35,11 @@
                 </a>
               </li>
               <li>
+                <a href="{{ url_for('train') }}" class="{% if request.path == '/train' %}active{% endif %}">
+                  <i class="fa-solid fa-gears"></i> Model Training
+                </a>
+              </li>
+              <li>
                 <a href="{{ url_for('predict') }}" class="{% if request.path == '/predict' %}active{% endif %}">
                   <i class="fa-solid fa-wand-magic-sparkles"></i> Predict Result
                 </a>

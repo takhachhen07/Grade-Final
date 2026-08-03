@@ -1,6 +1,8 @@
 # Student Performance Prediction Using Decision Tree 🎓
 
-A beginner-friendly Data Mining mini project predicting whether a student will **Pass** or **Fail** based on academic parameters using a **Decision Tree Classifier** and a **Flask** web application.
+A comprehensive Data Mining project predicting whether a student will **Pass** or **Fail** based on academic parameters using a **Decision Tree Classifier** and a **Flask / Node.js** web application.
+
+> 📖 **Detailed Documentation:** For a complete breakdown of all Data Mining concepts, Data Structures, Machine Learning algorithms, and mathematical formulas, please see [PROJECT_DOCUMENTATION.md](PROJECT_DOCUMENTATION.md).
 
 ---
 

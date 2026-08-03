@@ -1,12 +1,13 @@
 /* Client-Side Utilities for Student Performance Analytics */
 
 document.addEventListener('DOMContentLoaded', () => {
-  // Handle Data Cleaning trigger
-  const cleanDataBtn = document.getElementById('clean-data-btn');
-  if (cleanDataBtn) {
-    cleanDataBtn.addEventListener('click', async () => {
-      cleanDataBtn.disabled = true;
-      cleanDataBtn.innerHTML = '⏳ Cleaning Data...';
+  // Handle Data Cleaning triggers
+  const cleanDataBtns = document.querySelectorAll('.clean-data-trigger, #clean-data-btn');
+  cleanDataBtns.forEach(btn => {
+    btn.addEventListener('click', async () => {
+      btn.disabled = true;
+      const originalHtml = btn.innerHTML;
+      btn.innerHTML = '⏳ Cleaning Data...';
 
       try {
         const response = await fetch('/api/clean-data', { method: 'POST' });
@@ -21,11 +22,11 @@ document.addEventListener('DOMContentLoaded', () => {
       } catch (err) {
         alert('Data cleaning failed: ' + err.message);
       } finally {
-        cleanDataBtn.disabled = false;
-        cleanDataBtn.innerHTML = '<i class="fa-solid fa-wand-magic-sparkles"></i> Clean Missing Data';
+        btn.disabled = false;
+        btn.innerHTML = originalHtml;
       }
     });
-  }
+  });
 
   // Handle CSV Upload Form
   const uploadForm = document.getElementById('upload-csv-form');
