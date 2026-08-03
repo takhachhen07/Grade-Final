@@ -1,0 +1,154 @@
+{% extends "base.html" %}
+
+{% block title %}Student Dataset & Data Cleaning{% endblock %}
+
+{% block content %}
+<div class="page-header" style="display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 1rem;">
+  <div>
+    <h1>Student Dataset</h1>
+    <p>Inspect student records, clean missing data automatically, or upload custom student CSV datasets.</p>
+  </div>
+  <div style="display: flex; gap: 0.75rem;">
+    <button id="clean-data-btn" class="btn"><i class="fa-solid fa-broom"></i> Clean Dataset</button>
+  </div>
+</div>
+
+<!-- Summary Stats Cards -->
+<div class="grid-4">
+  <div class="metric-card metric-card-primary">
+    <div class="metric-card-header">
+      <h3>Avg Attendance</h3>
+      <div class="metric-arrow-btn"><i class="fa-solid fa-arrow-up-right"></i></div>
+    </div>
+    <div class="metric-body">
+      <div class="value">{{ stats.avg_attendance }}%</div>
+      <div class="metric-footer-badge">
+        <i class="fa-solid fa-clipboard-user"></i> Class Participation
+      </div>
+    </div>
+  </div>
+
+  <div class="metric-card">
+    <div class="metric-card-header">
+      <h3>Avg Study Hours</h3>
+      <div class="metric-arrow-btn"><i class="fa-solid fa-arrow-up-right"></i></div>
+    </div>
+    <div class="metric-body">
+      <div class="value">{{ stats.avg_study_hours }} <span style="font-size: 0.9rem; font-weight: 600;">hrs/wk</span></div>
+      <div class="metric-footer-badge" style="color: var(--secondary);">
+        <i class="fa-solid fa-book-open"></i> Weekly Preparation
+      </div>
+    </div>
+  </div>
+
+  <div class="metric-card">
+    <div class="metric-card-header">
+      <h3>Avg Internal Marks</h3>
+      <div class="metric-arrow-btn"><i class="fa-solid fa-arrow-up-right"></i></div>
+    </div>
+    <div class="metric-body">
+      <div class="value">{{ stats.avg_internal_marks }} <span style="font-size: 0.9rem; font-weight: 600;">/ 50</span></div>
+      <div class="metric-footer-badge" style="color: var(--info);">
+        <i class="fa-solid fa-file-pen"></i> Continuous Assessment
+      </div>
+    </div>
+  </div>
+
+  <div class="metric-card">
+    <div class="metric-card-header">
+      <h3>Avg Absences</h3>
+      <div class="metric-arrow-btn"><i class="fa-solid fa-arrow-up-right"></i></div>
+    </div>
+    <div class="metric-body">
+      <div class="value">{{ stats.avg_absences }} <span style="font-size: 0.9rem; font-weight: 600;">days</span></div>
+      <div class="metric-footer-badge" style="color: #9333ea;">
+        <i class="fa-solid fa-user-xmark"></i> Absenteeism Metric
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Cleaning & CSV Upload -->
+<div class="grid-2">
+  <div class="card">
+    <h2 style="font-size: 1.15rem; margin-top: 0; font-weight: 700;"><i class="fa-solid fa-broom" style="color: var(--primary);"></i> Data Cleaning</h2>
+    <p style="color: var(--text-secondary); font-size: 0.88rem;">
+      Fills missing numerical values using column averages and missing categorical values using column modes, ensuring clean data for analysis.
+    </p>
+
+    {% if has_missing %}
+    <div class="alert alert-warning">
+      <i class="fa-solid fa-triangle-exclamation"></i> <strong>Missing Values Detected:</strong><br>
+      {% for col, count in raw_missing.items() if count > 0 %}
+        • {{ col }}: {{ count }} missing records<br>
+      {% endfor %}
+    </div>
+    {% else %}
+    <div class="alert alert-success">
+      <i class="fa-solid fa-circle-check"></i> All student records are clean. Zero missing values detected.
+    </div>
+    {% endif %}
+
+    <button id="clean-data-btn" class="btn" style="width: 100%; justify-content: center;">
+      <i class="fa-solid fa-wand-magic-sparkles"></i> Clean Missing Data
+    </button>
+  </div>
+
+  <div class="card">
+    <h2 style="font-size: 1.15rem; margin-top: 0; font-weight: 700;"><i class="fa-solid fa-file-csv" style="color: var(--primary);"></i> Upload Student CSV</h2>
+    <p style="color: var(--text-secondary); font-size: 0.88rem;">
+      Upload a new student performance CSV file to update the dataset and retrain the prediction model automatically.
+    </p>
+
+    <form id="upload-csv-form" enctype="multipart/form-data">
+      <div class="form-group">
+        <label for="file">Select CSV File:</label>
+        <input type="file" id="file" name="file" accept=".csv" class="form-control" required>
+      </div>
+      <button type="submit" class="btn btn-secondary" style="width: 100%; justify-content: center;">
+        <i class="fa-solid fa-upload"></i> Upload & Retrain Model
+      </button>
+    </form>
+  </div>
+</div>
+
+<!-- Data Table -->
+<div class="card">
+  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; flex-wrap: wrap; gap: 0.5rem;">
+    <h2 style="font-size: 1.15rem; margin: 0; font-weight: 700;"><i class="fa-solid fa-table" style="color: var(--primary);"></i> Student Dataset (Showing First 100 of {{ total_count }} Records)</h2>
+    <span class="badge badge-info">{{ total_count }} Total Records</span>
+  </div>
+
+  <div class="table-responsive" style="max-height: 480px; overflow-y: auto;">
+    <table class="table">
+      <thead>
+        <tr>
+          {% for col in columns %}
+          <th>{{ col }}</th>
+          {% endfor %}
+        </tr>
+      </thead>
+      <tbody>
+        {% for row in records %}
+        <tr>
+          {% for col in columns %}
+          <td>
+            {% if col == 'Result' %}
+              {% if row[col] == 'Pass' %}
+                <span class="badge badge-pass"><i class="fa-solid fa-circle-check"></i> Pass</span>
+              {% else %}
+                <span class="badge badge-fail"><i class="fa-solid fa-circle-xmark"></i> Fail</span>
+              {% endif %}
+            {% else %}
+              {{ row[col] if row[col] != '' and row[col] is not none else '—' }}
+            {% endif %}
+          </td>
+          {% endfor %}
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}
+

@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}GradePric — Student Performance Analytics{% endblock %}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+  <div class="app-wrapper">
+    <!-- Left Sidebar Navigation -->
+    <aside class="app-sidebar">
+      <div>
+        <a href="{{ url_for('index') }}" class="sidebar-brand">
+          <div class="brand-icon">
+            <i class="fa-solid fa-graduation-cap"></i>
+          </div>
+          <span>GradePric</span>
+        </a>
+
+        <div class="sidebar-nav">
+          <div>
+            <div class="sidebar-section-label">NAVIGATION</div>
+            <ul class="sidebar-menu">
+              <li>
+                <a href="{{ url_for('index') }}" class="{% if request.path == '/' %}active{% endif %}">
+                  <i class="fa-solid fa-chart-line"></i> Overview
+                </a>
+              </li>
+              <li>
+                <a href="{{ url_for('dataset') }}" class="{% if request.path == '/dataset' %}active{% endif %}">
+                  <i class="fa-solid fa-database"></i> Student Dataset
+                </a>
+              </li>
+              <li>
+                <a href="{{ url_for('predict') }}" class="{% if request.path == '/predict' %}active{% endif %}">
+                  <i class="fa-solid fa-wand-magic-sparkles"></i> Predict Result
+                </a>
+              </li>
+              <li>
+                <a href="{{ url_for('tree') }}" class="{% if request.path == '/tree' %}active{% endif %}">
+                  <i class="fa-solid fa-sitemap"></i> Decision Tree
+                </a>
+              </li>
+              <li>
+                <a href="{{ url_for('results') }}" class="{% if request.path == '/results' %}active{% endif %}">
+                  <i class="fa-solid fa-clock-rotate-left"></i> Prediction History
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <div class="app-main">
+      <!-- Main Body Container -->
+      <main class="main-container">
+        {% block content %}{% endblock %}
+      </main>
+
+      <!-- Global Footer -->
+      <footer>
+        <div style="margin-bottom: 0.25rem; font-weight: 700;">
+          Data Warehouse and Data Mining Project by Rahul, Neeti & Sathin - 022 Batch
+        </div>
+        <div>
+          Predict student outcomes, analyze key performance factors, and provide tailored academic recommendations.
+        </div>
+      </footer>
+    </div>
+  </div>
+
+  <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+  {% block scripts %}{% endblock %}
+</body>
+</html>
+

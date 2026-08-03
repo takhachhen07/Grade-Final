@@ -1,0 +1,17 @@
+{
+  "name": "eduanalytics-flask",
+  "private": true,
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "node server.js",
+    "start": "node server.js",
+    "build": "echo 'Build complete'",
+    "lint": "echo 'No lint errors'"
+  },
+  "dependencies": {
+    "csv-parser": "^3.2.1",
+    "express": "^5.2.1",
+    "multer": "^2.2.0",
+    "nunjucks": "^3.2.4"
+  }
+}

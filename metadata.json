@@ -1,0 +1,8 @@
+{
+  "name": "Final GradePric",
+  "description": "A beginner-friendly Data Mining mini project predicting student performance (Pass/Fail) using Decision Tree Classifier and Flask.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

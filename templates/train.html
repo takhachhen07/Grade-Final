@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Train Model - Student Performance Prediction</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <nav class="navbar">
+        <a href="/" class="navbar-brand">
+            🎓 Student Performance <span>Predictor</span>
+        </a>
+        <ul class="nav-links">
+            <li><a href="/" class="nav-link">Home</a></li>
+            <li><a href="/dataset" class="nav-link">Dataset</a></li>
+            <li><a href="/train" class="nav-link active">Train Model</a></li>
+            <li><a href="/predict" class="nav-link">Prediction</a></li>
+            <li><a href="/results" class="nav-link">Results</a></li>
+        </ul>
+    </nav>
+
+    <div class="main-container">
+        <div class="page-header">
+            <h1 class="page-title">Decision Tree Model Training & Evaluation</h1>
+            <p class="page-subtitle">Configure model parameters, retrain the Decision Tree Classifier, and evaluate dynamic metrics.</p>
+        </div>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+            {% for category, message in messages %}
+              <div class="alert alert-{{ category }}">
+                <span>{{ message }}</span>
+              </div>
+            {% endfor %}
+          {% endif %}
+        {% endwith %}
+
+        <!-- Model Configuration Form -->
+        <div class="form-card">
+            <h2 style="font-size: 1.15rem; font-weight: 700; margin-bottom: 1rem;">⚙️ Model Hyper-Parameters</h2>
+            <form action="/train" method="POST" class="form-grid">
+                <div class="form-group">
+                    <label for="criterion">Splitting Criterion:</label>
+                    <select id="criterion" name="criterion" class="form-control">
+                        <option value="entropy" {% if results.criterion == 'entropy' or not results.criterion %}selected{% endif %}>Shannon Entropy / Info Gain (H(S))</option>
+                        <option value="gini" {% if results.criterion == 'gini' %}selected{% endif %}>Gini Impurity Index (Gini(S))</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="max_depth">Max Tree Depth (max_depth):</label>
+                    <input type="number" id="max_depth" name="max_depth" min="1" max="15" value="{{ results.max_depth | default(5) }}" class="form-control">
+                </div>
+
+                <div class="form-group">
+                    <label for="test_size">Test Set Split Ratio (test_size):</label>
+                    <select id="test_size" name="test_size" class="form-control">
+                        <option value="0.1" {% if results.test_size == 0.1 %}selected{% endif %}>10% Test / 90% Train</option>
+                        <option value="0.2" {% if results.test_size == 0.2 or not results.test_size %}selected{% endif %}>20% Test / 80% Train</option>
+                        <option value="0.3" {% if results.test_size == 0.3 %}selected{% endif %}>30% Test / 70% Train</option>
+                    </select>
+                </div>
+
+                <div class="form-group" style="justify-content: flex-end;">
+                    <label>&nbsp;</label>
+                    <button type="submit" class="btn btn-primary">🚀 Retrain Decision Tree Model</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Evaluation Metrics Grid -->
+        <div class="card-grid">
+            <div class="card">
+                <div class="card-title"><span>Model Accuracy</span> 🎯</div>
+                <div class="metric-number" style="color: #4F46E5;">{{ results.accuracy }}%</div>
+                <div class="metric-label">Overall Correct Predictions</div>
+            </div>
+
+            <div class="card">
+                <div class="card-title"><span>Precision</span> 📐</div>
+                <div class="metric-number" style="color: #0EA5E9;">{{ results.precision }}%</div>
+                <div class="metric-label">Pass Class Precision</div>
+            </div>
+
+            <div class="card">
+                <div class="card-title"><span>Recall</span> 🔍</div>
+                <div class="metric-number" style="color: #10B981;">{{ results.recall }}%</div>
+                <div class="metric-label">Pass Class Sensitivity</div>
+            </div>
+
+            <div class="card">
+                <div class="card-title"><span>F1-Score</span> ⚖️</div>
+                <div class="metric-number" style="color: #8B5CF6;">{{ results.f1_score }}%</div>
+                <div class="metric-label">Harmonic Mean</div>
+            </div>
+        </div>
+
+        <!-- Visual Charts Grid -->
+        <div class="card-grid" style="grid-template-columns: 1fr 1fr;">
+            <!-- Confusion Matrix Display -->
+            <div class="card">
+                <h3 style="font-size: 1.1rem; font-weight: 700; margin-bottom: 1rem;">🔲 Confusion Matrix Breakdown</h3>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem; text-align: center;">
+                    <div style="background-color: #ECFDF5; padding: 1rem; border-radius: 8px; border: 1px solid #10B981;">
+                        <div style="font-size: 0.8rem; color: #065F46; font-weight: 700;">TRUE POSITIVE (TP)</div>
+                        <div style="font-size: 1.8rem; font-weight: 800; color: #065F46;">{{ results.confusion_matrix.tp }}</div>
+                        <div style="font-size: 0.75rem; color: #047857;">Actual Pass & Predicted Pass</div>
+                    </div>
+                    <div style="background-color: #FEF2F2; padding: 1rem; border-radius: 8px; border: 1px solid #EF4444;">
+                        <div style="font-size: 0.8rem; color: #991B1B; font-weight: 700;">FALSE POSITIVE (FP)</div>
+                        <div style="font-size: 1.8rem; font-weight: 800; color: #991B1B;">{{ results.confusion_matrix.fp }}</div>
+                        <div style="font-size: 0.75rem; color: #B91C1C;">Actual Fail & Predicted Pass</div>
+                    </div>
+                    <div style="background-color: #FEF2F2; padding: 1rem; border-radius: 8px; border: 1px solid #EF4444;">
+                        <div style="font-size: 0.8rem; color: #991B1B; font-weight: 700;">FALSE NEGATIVE (FN)</div>
+                        <div style="font-size: 1.8rem; font-weight: 800; color: #991B1B;">{{ results.confusion_matrix.fn }}</div>
+                        <div style="font-size: 0.75rem; color: #B91C1C;">Actual Pass & Predicted Fail</div>
+                    </div>
+                    <div style="background-color: #F0F9FF; padding: 1rem; border-radius: 8px; border: 1px solid #0EA5E9;">
+                        <div style="font-size: 0.8rem; color: #0369A1; font-weight: 700;">TRUE NEGATIVE (TN)</div>
+                        <div style="font-size: 1.8rem; font-weight: 800; color: #0369A1;">{{ results.confusion_matrix.tn }}</div>
+                        <div style="font-size: 0.75rem; color: #0284C7;">Actual Fail & Predicted Fail</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Feature Importances -->
+            <div class="card">
+                <h3 style="font-size: 1.1rem; font-weight: 700; margin-bottom: 1rem;">📊 Feature Importance Rankings</h3>
+                <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+                    {% for feat in results.feature_importance %}
+                    <div>
+                        <div style="display: flex; justify-content: space-between; font-size: 0.85rem; font-weight: 600; margin-bottom: 0.25rem;">
+                            <span>{{ feat.feature }}</span>
+                            <span>{{ feat.importance }}%</span>
+                        </div>
+                        <div style="width: 100%; background-color: #E2E8F0; height: 8px; border-radius: 4px; overflow: hidden;">
+                            <div style="width: {{ feat.importance }}%; background-color: var(--primary-color); height: 100%;"></div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Decision Tree Decision Rules Text -->
+        <div class="card">
+            <h3 style="font-size: 1.1rem; font-weight: 700; margin-bottom: 0.75rem;">🌳 Decision Tree Rules Text Summary</h3>
+            <pre class="code-block">{{ results.tree_rules }}</pre>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <p>Student Performance Prediction Using Decision Tree &copy; 2026</p>
+    </footer>
+</body>
+</html>

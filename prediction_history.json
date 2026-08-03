@@ -1,0 +1,387 @@
+[
+  {
+    "id": "PRED-1785741302771",
+    "timestamp": "2026-08-03 07:15:02",
+    "inputs": {
+      "gender": "Female",
+      "age": 21,
+      "attendance": 85,
+      "study_hours": 12,
+      "internal_marks": 38,
+      "previous_grade": "A",
+      "absences": 2
+    },
+    "outcome": "Pass",
+    "confidence": 96,
+    "pass_probability": 96,
+    "fail_probability": 4,
+    "recommendations": [
+      {
+        "type": "success",
+        "title": "Strong Attendance Record",
+        "rule": "Attendance ≥ 85%",
+        "text": "Excellent attendance rate at 85%. Continue maintaining high classroom engagement."
+      },
+      {
+        "type": "success",
+        "title": "Solid Internal Assessment",
+        "rule": "Internal Marks ≥ 35 / 50",
+        "text": "Good internal score (38/50). Keep up the study momentum for final exams."
+      }
+    ]
+  },
+  {
+    "id": "PRED-1785731463",
+    "timestamp": "2026-08-03 04:31:03",
+    "inputs": {
+      "gender": "Female",
+      "age": 21,
+      "attendance": 85.5,
+      "study_hours": 12.5,
+      "internal_marks": 38,
+      "previous_grade": "A",
+      "absences": 2
+    },
+    "outcome": "Pass",
+    "confidence": 96.1,
+    "pass_probability": 96.1,
+    "fail_probability": 3.9,
+    "recommendations": [
+      {
+        "type": "success",
+        "title": "Strong Attendance Record",
+        "rule": "Attendance ≥ 85%",
+        "text": "Excellent attendance rate at 85.5%. Continue maintaining high classroom engagement."
+      },
+      {
+        "type": "success",
+        "title": "Solid Internal Assessment",
+        "rule": "Internal Marks ≥ 35 / 50",
+        "text": "Good internal score (38.0/50). Keep up the study momentum for final exams."
+      }
+    ]
+  },
+  {
+    "id": "PRED-1785730819",
+    "timestamp": "2026-08-03 04:20:19",
+    "inputs": {
+      "gender": "Female",
+      "age": 19,
+      "attendance": 71,
+      "study_hours": 8,
+      "internal_marks": 30,
+      "previous_grade": "C",
+      "absences": 7
+    },
+    "outcome": "Pass",
+    "confidence": 95,
+    "pass_probability": 95,
+    "fail_probability": 5,
+    "recommendations": [
+      {
+        "type": "danger",
+        "title": "High Attendance Risk",
+        "rule": "Attendance < 75%",
+        "text": "Current attendance is 71.0%. Mandatory attendance counseling and class catch-up sessions required."
+      },
+      {
+        "type": "warning",
+        "title": "Study Hours Deficit",
+        "rule": "Study Hours < 10 hrs/wk",
+        "text": "Weekly self-study is only 8.0 hrs/wk. Increase structured study time to at least 12–15 hours weekly."
+      }
+    ]
+  },
+  {
+    "id": "PRED-1785730776",
+    "timestamp": "2026-08-03 04:19:36",
+    "inputs": {
+      "gender": "Male",
+      "age": 20,
+      "attendance": 100,
+      "study_hours": 11.5,
+      "internal_marks": 41,
+      "previous_grade": "B",
+      "absences": 0
+    },
+    "outcome": "Pass",
+    "confidence": 61.8,
+    "pass_probability": 61.8,
+    "fail_probability": 38.2,
+    "recommendations": [
+      {
+        "type": "success",
+        "title": "Strong Attendance Record",
+        "rule": "Attendance ≥ 85%",
+        "text": "Excellent attendance rate at 100.0%. Continue maintaining high classroom engagement."
+      },
+      {
+        "type": "success",
+        "title": "Solid Internal Assessment",
+        "rule": "Internal Marks ≥ 35 / 50",
+        "text": "Good internal score (41.0/50). Keep up the study momentum for final exams."
+      }
+    ]
+  },
+  {
+    "id": "PRED-1785730764",
+    "timestamp": "2026-08-03 04:19:24",
+    "inputs": {
+      "gender": "Male",
+      "age": 20,
+      "attendance": 100,
+      "study_hours": 16.5,
+      "internal_marks": 33,
+      "previous_grade": "B",
+      "absences": 0
+    },
+    "outcome": "Pass",
+    "confidence": 85.4,
+    "pass_probability": 85.4,
+    "fail_probability": 14.6,
+    "recommendations": [
+      {
+        "type": "success",
+        "title": "Strong Attendance Record",
+        "rule": "Attendance ≥ 85%",
+        "text": "Excellent attendance rate at 100.0%. Continue maintaining high classroom engagement."
+      }
+    ]
+  },
+  {
+    "id": "PRED-1785730760",
+    "timestamp": "2026-08-03 04:19:20",
+    "inputs": {
+      "gender": "Male",
+      "age": 20,
+      "attendance": 100,
+      "study_hours": 3,
+      "internal_marks": 33,
+      "previous_grade": "B",
+      "absences": 0
+    },
+    "outcome": "Fail",
+    "confidence": 75.1,
+    "pass_probability": 24.9,
+    "fail_probability": 75.1,
+    "recommendations": [
+      {
+        "type": "success",
+        "title": "Strong Attendance Record",
+        "rule": "Attendance ≥ 85%",
+        "text": "Excellent attendance rate at 100.0%. Continue maintaining high classroom engagement."
+      },
+      {
+        "type": "warning",
+        "title": "Study Hours Deficit",
+        "rule": "Study Hours < 10 hrs/wk",
+        "text": "Weekly self-study is only 3.0 hrs/wk. Increase structured study time to at least 12–15 hours weekly."
+      }
+    ]
+  },
+  {
+    "id": "PRED-1785730757",
+    "timestamp": "2026-08-03 04:19:17",
+    "inputs": {
+      "gender": "Male",
+      "age": 20,
+      "attendance": 100,
+      "study_hours": 3,
+      "internal_marks": 33,
+      "previous_grade": "B",
+      "absences": 0
+    },
+    "outcome": "Fail",
+    "confidence": 75.1,
+    "pass_probability": 24.9,
+    "fail_probability": 75.1,
+    "recommendations": [
+      {
+        "type": "success",
+        "title": "Strong Attendance Record",
+        "rule": "Attendance ≥ 85%",
+        "text": "Excellent attendance rate at 100.0%. Continue maintaining high classroom engagement."
+      },
+      {
+        "type": "warning",
+        "title": "Study Hours Deficit",
+        "rule": "Study Hours < 10 hrs/wk",
+        "text": "Weekly self-study is only 3.0 hrs/wk. Increase structured study time to at least 12–15 hours weekly."
+      }
+    ]
+  },
+  {
+    "id": "PRED-1785730750",
+    "timestamp": "2026-08-03 04:19:10",
+    "inputs": {
+      "gender": "Male",
+      "age": 20,
+      "attendance": 100,
+      "study_hours": 3,
+      "internal_marks": 33,
+      "previous_grade": "C",
+      "absences": 0
+    },
+    "outcome": "Fail",
+    "confidence": 75.1,
+    "pass_probability": 24.9,
+    "fail_probability": 75.1,
+    "recommendations": [
+      {
+        "type": "success",
+        "title": "Strong Attendance Record",
+        "rule": "Attendance ≥ 85%",
+        "text": "Excellent attendance rate at 100.0%. Continue maintaining high classroom engagement."
+      },
+      {
+        "type": "warning",
+        "title": "Study Hours Deficit",
+        "rule": "Study Hours < 10 hrs/wk",
+        "text": "Weekly self-study is only 3.0 hrs/wk. Increase structured study time to at least 12–15 hours weekly."
+      }
+    ]
+  },
+  {
+    "id": "PRED-1785730724",
+    "timestamp": "2026-08-03 04:18:44",
+    "inputs": {
+      "gender": "Male",
+      "age": 20,
+      "attendance": 80,
+      "study_hours": 12.5,
+      "internal_marks": 33,
+      "previous_grade": "B",
+      "absences": 3
+    },
+    "outcome": "Fail",
+    "confidence": 55.5,
+    "pass_probability": 44.5,
+    "fail_probability": 55.5,
+    "recommendations": [
+      {
+        "type": "success",
+        "title": "Optimal Academic Profile",
+        "rule": "All Metrics Nominal",
+        "text": "Student demonstrates steady study habits, high attendance, and healthy assessment marks."
+      }
+    ]
+  },
+  {
+    "id": "PRED-1785730717",
+    "timestamp": "2026-08-03 04:18:37",
+    "inputs": {
+      "gender": "Male",
+      "age": 20,
+      "attendance": 80,
+      "study_hours": 15.5,
+      "internal_marks": 30,
+      "previous_grade": "B",
+      "absences": 3
+    },
+    "outcome": "Pass",
+    "confidence": 71.1,
+    "pass_probability": 71.1,
+    "fail_probability": 28.9,
+    "recommendations": [
+      {
+        "type": "success",
+        "title": "Optimal Academic Profile",
+        "rule": "All Metrics Nominal",
+        "text": "Student demonstrates steady study habits, high attendance, and healthy assessment marks."
+      }
+    ]
+  },
+  {
+    "id": "PRED-1785730697",
+    "timestamp": "2026-08-03 04:18:17",
+    "inputs": {
+      "gender": "Male",
+      "age": 20,
+      "attendance": 80,
+      "study_hours": 10,
+      "internal_marks": 30,
+      "previous_grade": "B",
+      "absences": 3
+    },
+    "outcome": "Fail",
+    "confidence": 60.4,
+    "pass_probability": 39.6,
+    "fail_probability": 60.4,
+    "recommendations": [
+      {
+        "type": "success",
+        "title": "Optimal Academic Profile",
+        "rule": "All Metrics Nominal",
+        "text": "Student demonstrates steady study habits, high attendance, and healthy assessment marks."
+      }
+    ]
+  },
+  {
+    "id": "PRED-1785730671",
+    "timestamp": "2026-08-03 04:17:51",
+    "inputs": {
+      "gender": "Male",
+      "age": 20,
+      "attendance": 67.5,
+      "study_hours": 4.5,
+      "internal_marks": 25,
+      "previous_grade": "C",
+      "absences": 4
+    },
+    "outcome": "Fail",
+    "confidence": 75.1,
+    "pass_probability": 24.9,
+    "fail_probability": 75.1,
+    "recommendations": [
+      {
+        "type": "danger",
+        "title": "High Attendance Risk",
+        "rule": "Attendance < 75%",
+        "text": "Current attendance is 67.5%. Mandatory attendance counseling and class catch-up sessions required."
+      },
+      {
+        "type": "warning",
+        "title": "Study Hours Deficit",
+        "rule": "Study Hours < 10 hrs/wk",
+        "text": "Weekly self-study is only 4.5 hrs/wk. Increase structured study time to at least 12–15 hours weekly."
+      }
+    ]
+  },
+  {
+    "id": "PRED-1785730637",
+    "timestamp": "2026-08-03 04:17:17",
+    "inputs": {
+      "gender": "Female",
+      "age": 22,
+      "attendance": 60,
+      "study_hours": 4,
+      "internal_marks": 25,
+      "previous_grade": "C",
+      "absences": 9
+    },
+    "outcome": "Fail",
+    "confidence": 75.1,
+    "pass_probability": 24.9,
+    "fail_probability": 75.1,
+    "recommendations": [
+      {
+        "type": "danger",
+        "title": "High Attendance Risk",
+        "rule": "Attendance < 75%",
+        "text": "Current attendance is 60.0%. Mandatory attendance counseling and class catch-up sessions required."
+      },
+      {
+        "type": "warning",
+        "title": "Study Hours Deficit",
+        "rule": "Study Hours < 10 hrs/wk",
+        "text": "Weekly self-study is only 4.0 hrs/wk. Increase structured study time to at least 12–15 hours weekly."
+      },
+      {
+        "type": "warning",
+        "title": "High Unexcused Absences",
+        "rule": "Absences > 7 days",
+        "text": "Total unexcused absences (9 days) impair course learning continuity. Meet academic counselor."
+      }
+    ]
+  }
+]

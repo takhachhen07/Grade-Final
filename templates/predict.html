@@ -1,0 +1,192 @@
+{% extends "base.html" %}
+
+{% block title %}Predict Result — Student Performance Predictor{% endblock %}
+
+{% block content %}
+<div class="page-header" style="display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 1rem;">
+  <div>
+    <h1>Predict Student Result</h1>
+    <p>Input student academic indicators to predict Pass/Fail outcome probabilities and receive personalized recommendations.</p>
+  </div>
+  <div style="display: flex; gap: 0.75rem;">
+    <a href="{{ url_for('results') }}" class="btn btn-secondary"><i class="fa-solid fa-clock-rotate-left"></i> History Log</a>
+  </div>
+</div>
+
+<div class="grid-2">
+  <!-- Feature Input Form -->
+  <div class="card">
+    <h2 style="font-size: 1.15rem; margin-top: 0; font-weight: 700;"><i class="fa-solid fa-sliders" style="color: var(--primary);"></i> Student Details</h2>
+
+    <form action="{{ url_for('predict') }}" method="POST">
+      <div class="form-group" style="margin-bottom: 0.85rem;">
+        <label for="student_id"><i class="fa-solid fa-id-card"></i> Student ID</label>
+        <input type="text" id="student_id" name="student_id" class="form-control" placeholder="e.g. STU-1001" value="{{ form_data.student_id if form_data else 'STU-1001' }}" required style="font-weight: 700; color: var(--primary);">
+      </div>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+        <div class="form-group">
+          <label for="gender"><i class="fa-solid fa-venus-mars"></i> Gender</label>
+          <select id="gender" name="gender" class="form-control">
+            <option value="Male" {% if form_data and form_data.gender == 'Male' %}selected{% endif %}>Male</option>
+            <option value="Female" {% if form_data and form_data.gender == 'Female' %}selected{% endif %}>Female</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="age"><i class="fa-solid fa-cake-candles"></i> Age (years)</label>
+          <input type="number" id="age" name="age" min="15" max="35" class="form-control" placeholder="e.g. 20" value="{{ form_data.age if form_data else 20 }}" required>
+        </div>
+      </div>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+        <div class="form-group">
+          <label for="attendance"><i class="fa-solid fa-clipboard-user"></i> Attendance Rate (%)</label>
+          <input type="number" id="attendance" name="attendance" min="0" max="100" step="0.1" class="form-control" placeholder="e.g. 80.0" value="{{ form_data.attendance if form_data else 80.0 }}" required>
+        </div>
+
+        <div class="form-group">
+          <label for="study_hours"><i class="fa-solid fa-book-open"></i> Weekly Study Hours</label>
+          <input type="number" id="study_hours" name="study_hours" min="0" max="100" step="0.5" class="form-control" placeholder="e.g. 10.0" value="{{ form_data.study_hours if form_data else 10.0 }}" required>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="internal_marks"><i class="fa-solid fa-file-pen"></i> Internal Assessment Marks (0–50)</label>
+        <input type="number" id="internal_marks" name="internal_marks" min="0" max="50" step="0.5" class="form-control" placeholder="e.g. 30.0" value="{{ form_data.internal_marks if form_data else 30.0 }}" required>
+      </div>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+        <div class="form-group">
+          <label for="previous_grade"><i class="fa-solid fa-graduation-cap"></i> Previous Grade</label>
+          <select id="previous_grade" name="previous_grade" class="form-control">
+            {% for g in ['A', 'B', 'C', 'D', 'F'] %}
+            <option value="{{ g }}" {% if form_data and form_data.previous_grade == g %}selected{% elif not form_data and g == 'B' %}selected{% endif %}>Grade {{ g }}</option>
+            {% endfor %}
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="absences"><i class="fa-solid fa-user-xmark"></i> Unexcused Absences (days)</label>
+          <input type="number" id="absences" name="absences" min="0" max="100" class="form-control" placeholder="e.g. 3" value="{{ form_data.absences if form_data else 3 }}" required>
+        </div>
+      </div>
+
+      <button type="submit" class="btn" style="width: 100%; justify-content: center; margin-top: 0.5rem;">
+        <i class="fa-solid fa-wand-magic-sparkles"></i> Evaluate Student Outcome
+      </button>
+    </form>
+  </div>
+
+  <!-- Prediction Outcome & Recommendations View -->
+  <div>
+    {% if result %}
+    <div class="card" style="border-top: 5px solid {% if result.outcome == 'Pass' %}var(--primary){% else %}var(--danger){% endif %};">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+        <div>
+          <span style="font-size: 0.72rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase;">Evaluated Student ID</span>
+          <h2 style="font-size: 1.15rem; margin: 0; font-weight: 800; color: var(--primary);"><i class="fa-solid fa-id-card"></i> {{ result.student_id }}</h2>
+        </div>
+        <span class="badge {% if result.outcome == 'Pass' %}badge-pass{% else %}badge-fail{% endif %}" style="font-size: 1rem; padding: 0.35rem 0.85rem;">
+          {{ result.outcome | upper }}
+        </span>
+      </div>
+
+      <div style="display: flex; gap: 1.5rem; background: #f9fafb; padding: 1rem; border-radius: var(--radius-sm); margin-bottom: 1.25rem; border: 1px solid var(--border-color);">
+        <div style="flex: 1;">
+          <small style="color: var(--text-secondary); text-transform: uppercase; font-size: 0.72rem; font-weight: 700;">Pass Probability</small>
+          <div style="font-size: 1.6rem; font-weight: 800; color: var(--primary);">{{ result.pass_probability }}%</div>
+        </div>
+        <div style="flex: 1;">
+          <small style="color: var(--text-secondary); text-transform: uppercase; font-size: 0.72rem; font-weight: 700;">Fail Probability</small>
+          <div style="font-size: 1.6rem; font-weight: 800; color: var(--danger);">{{ result.fail_probability }}%</div>
+        </div>
+      </div>
+
+      <h3 style="font-size: 0.95rem; margin-bottom: 0.75rem; color: var(--text-primary); font-weight: 700;"><i class="fa-solid fa-lightbulb" style="color: var(--warning);"></i> Personalized Recommendations & Advice</h3>
+      
+      <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+        {% for rec in result.recommendations %}
+        <div class="alert alert-{{ rec.type }}" style="margin-bottom: 0; padding: 0.75rem 1rem;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.25rem; width: 100%;">
+            <strong>{{ rec.title }}</strong>
+            <span style="font-size: 0.72rem; opacity: 0.85; font-family: monospace;">{{ rec.rule }}</span>
+          </div>
+          <div style="font-size: 0.85rem;">{{ rec.text }}</div>
+        </div>
+        {% endfor %}
+      </div>
+
+      <!-- Decision Tree Traversal Path Section -->
+      <div style="margin-top: 1.5rem; padding-top: 1.25rem; border-top: 1px solid var(--border-color);">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+          <h3 style="font-size: 0.98rem; margin: 0; color: var(--text-primary); font-weight: 700;">
+            <i class="fa-solid fa-route" style="color: var(--primary);"></i> Decision Process Path (Tree Traversal)
+          </h3>
+          <span class="badge badge-pass" style="font-size: 0.72rem; background: #e0f2fe; color: #0369a1;">
+            <i class="fa-solid fa-brain"></i> Entropy & Gini Index
+          </span>
+        </div>
+        <p style="font-size: 0.8rem; color: var(--text-secondary); margin-top: 0; margin-bottom: 0.85rem;">
+          The Decision Tree evaluated the student's metrics through the following node splits:
+        </p>
+
+        <div style="display: flex; flex-direction: column; gap: 0.65rem;">
+          {% if result.decision_steps %}
+            {% for step in result.decision_steps %}
+              {% if step.type == 'leaf' %}
+                <div style="background: #f0fdf4; border: 1px solid #bbf7d0; border-left: 4px solid {% if step.outcome == 'Pass' %}var(--secondary){% else %}var(--danger){% endif %}; padding: 0.85rem; border-radius: var(--radius-sm);">
+                  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.25rem;">
+                    <strong style="font-size: 0.85rem; color: var(--text-primary);">Step {{ step.step }}: Reached Leaf Decision Node ({{ step.node_name }})</strong>
+                    <span class="badge {% if step.outcome == 'Pass' %}badge-pass{% else %}badge-fail{% endif %}" style="font-size: 0.75rem;">
+                      {{ step.outcome | upper }} (Confidence: {{ step.confidence }}%)
+                    </span>
+                  </div>
+                  <div style="font-size: 0.8rem; color: var(--text-secondary); line-height: 1.35; margin-top: 0.25rem;">
+                    {{ step.explanation }}
+                  </div>
+                </div>
+              {% else %}
+                <div style="background: #f8fafc; border: 1px solid var(--border-color); border-left: 4px solid var(--primary); padding: 0.75rem 0.85rem; border-radius: var(--radius-sm);">
+                  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.2rem;">
+                    <span style="font-size: 0.72rem; font-weight: 700; color: var(--primary); text-transform: uppercase;">
+                      Step {{ step.step }}: {{ step.feature }} Split
+                    </span>
+                    <span style="font-size: 0.7rem; font-family: monospace; background: #e0e7ff; color: #3730a3; padding: 0.1rem 0.4rem; border-radius: 4px;">
+                      Node Split Rule
+                    </span>
+                  </div>
+                  <div style="font-size: 0.85rem; font-weight: 700; color: var(--text-primary);">
+                    {{ step.decision_detail }}
+                  </div>
+                </div>
+              {% endif %}
+            {% endfor %}
+          {% else %}
+            <div style="background: #f8fafc; padding: 0.75rem; border-radius: var(--radius-sm); font-size: 0.82rem; color: var(--text-secondary);">
+              Attendance ({{ result.inputs.attendance }}%) & Internal Marks ({{ result.inputs.internal_marks }}/50) traversed to target leaf node outcome.
+            </div>
+          {% endif %}
+        </div>
+      </div>
+
+      <div style="margin-top: 1.25rem; display: flex; justify-content: space-between; gap: 0.5rem; flex-wrap: wrap;">
+        <a href="{{ url_for('tree') }}?student_id={{ result.student_id }}&attendance={{ result.inputs.attendance }}&study_hours={{ result.inputs.study_hours }}&internal_marks={{ result.inputs.internal_marks }}&previous_grade={{ result.inputs.previous_grade }}&absences={{ result.inputs.absences }}" class="btn btn-secondary" style="font-size: 0.82rem;">
+          <i class="fa-solid fa-sitemap" style="color: var(--primary);"></i> Open Full Interactive Tree Diagram
+        </a>
+        <a href="{{ url_for('results') }}" class="btn btn-secondary" style="font-size: 0.82rem;">
+          <i class="fa-solid fa-clock-rotate-left"></i> View Prediction History
+        </a>
+      </div>
+    </div>
+    {% else %}
+    <div class="card" style="text-align: center; padding: 3rem 1.5rem; color: var(--text-secondary);">
+      <i class="fa-solid fa-chart-pie" style="font-size: 2.8rem; color: #d1d5db; margin-bottom: 1rem;"></i>
+      <h3 style="margin: 0 0 0.5rem 0; color: var(--text-primary); font-weight: 700;">Awaiting Student Details</h3>
+      <p style="margin: 0; font-size: 0.9rem;">Fill in the student details on the left and click "Evaluate Student Outcome" to view results.</p>
+    </div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}
+

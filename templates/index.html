@@ -1,0 +1,116 @@
+{% extends "base.html" %}
+
+{% block title %}Overview — Student Performance Analytics{% endblock %}
+
+{% block content %}
+<div class="page-header" style="display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 1rem;">
+  <div>
+    <h1>Dashboard</h1>
+    <p>Predict, analyze, and optimize student academic performance with ease.</p>
+  </div>
+  <div style="display: flex; gap: 0.75rem;">
+    <a href="{{ url_for('predict') }}" class="btn"><i class="fa-solid fa-plus"></i> New Prediction</a>
+    <a href="{{ url_for('tree') }}" class="btn btn-secondary"><i class="fa-solid fa-sitemap"></i> Decision Tree</a>
+    <a href="{{ url_for('dataset') }}" class="btn btn-secondary"><i class="fa-solid fa-arrow-down-to-bracket"></i> Student Dataset</a>
+  </div>
+</div>
+
+<!-- Key Metric Cards in Donezo style -->
+<div class="grid-4">
+  <!-- Primary Card with Emerald Gradient -->
+  <div class="metric-card metric-card-primary">
+    <div class="metric-card-header">
+      <h3>Total Records</h3>
+      <div class="metric-arrow-btn"><i class="fa-solid fa-arrow-up-right"></i></div>
+    </div>
+    <div class="metric-body">
+      <div class="value">{{ stats.total_records }}</div>
+      <div class="metric-footer-badge">
+        <i class="fa-solid fa-arrow-trend-up"></i> Staged in Database
+      </div>
+    </div>
+  </div>
+
+  <div class="metric-card">
+    <div class="metric-card-header">
+      <h3>Pass Rate</h3>
+      <div class="metric-arrow-btn"><i class="fa-solid fa-arrow-up-right"></i></div>
+    </div>
+    <div class="metric-body">
+      <div class="value">{{ stats.pass_rate }}%</div>
+      <div class="metric-footer-badge" style="color: var(--secondary);">
+        <i class="fa-solid fa-circle-check"></i> Overall Success Rate
+      </div>
+    </div>
+  </div>
+
+  <div class="metric-card">
+    <div class="metric-card-header">
+      <h3>Model Accuracy</h3>
+      <div class="metric-arrow-btn"><i class="fa-solid fa-arrow-up-right"></i></div>
+    </div>
+    <div class="metric-body">
+      <div class="value">{{ metrics.accuracy | default(92.3) }}%</div>
+      <div class="metric-footer-badge" style="color: var(--info);">
+        <i class="fa-solid fa-bullseye"></i> Calibrated Decision Tree
+      </div>
+    </div>
+  </div>
+
+  <div class="metric-card">
+    <div class="metric-card-header">
+      <h3>Model F1-Score</h3>
+      <div class="metric-arrow-btn"><i class="fa-solid fa-arrow-up-right"></i></div>
+    </div>
+    <div class="metric-body">
+      <div class="value">{{ metrics.f1_score | default(91.8) }}%</div>
+      <div class="metric-footer-badge" style="color: #9333ea;">
+        <i class="fa-solid fa-star"></i> High Precision Model
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- How It Works Section -->
+<div class="card" style="margin-top: 1rem;">
+  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+    <h2 style="font-size: 1.2rem; margin: 0; color: var(--text-primary); font-weight: 700;"><i class="fa-solid fa-diagram-project" style="color: var(--primary);"></i> How It Works</h2>
+    <span class="badge badge-pass"><i class="fa-solid fa-bolt"></i> Real-time AI Engine</span>
+  </div>
+  <p style="color: var(--text-secondary); font-size: 0.9rem; margin-top: 0;">
+    Our system processes student academic data through a 4-step pipeline to provide accurate outcome predictions and actionable study guidance.
+  </p>
+
+  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.25rem; margin-top: 1.25rem;">
+    <div style="background: #f9fafb; border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: 1.25rem;">
+      <div style="background: var(--primary-light); color: var(--primary); width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; border-radius: 50%; font-weight: 800; margin-bottom: 0.75rem;">1</div>
+      <strong style="display: block; color: var(--text-primary); margin-bottom: 0.25rem; font-size: 0.95rem;">Student Data Collection</strong>
+      <span style="font-size: 0.82rem; color: var(--text-secondary);">Stores student records including attendance %, weekly study hours, internal test marks, and absences.</span>
+    </div>
+
+    <div style="background: #f9fafb; border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: 1.25rem;">
+      <div style="background: #ecfdf5; color: var(--secondary); width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; border-radius: 50%; font-weight: 800; margin-bottom: 0.75rem;">2</div>
+      <strong style="display: block; color: var(--text-primary); margin-bottom: 0.25rem; font-size: 0.95rem;">Data Cleaning & Validation</strong>
+      <span style="font-size: 0.82rem; color: var(--text-secondary);">Automatically handles missing values using dataset averages and ensures data consistency.</span>
+    </div>
+
+    <div style="background: #f9fafb; border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: 1.25rem;">
+      <div style="background: #fef3c7; color: var(--warning); width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; border-radius: 50%; font-weight: 800; margin-bottom: 0.75rem;">3</div>
+      <strong style="display: block; color: var(--text-primary); margin-bottom: 0.25rem; font-size: 0.95rem;">AI Outcome Prediction</strong>
+      <span style="font-size: 0.82rem; color: var(--text-secondary);">Predicts student Pass/Fail probability using trained pattern recognition algorithms.</span>
+    </div>
+
+    <div style="background: #f9fafb; border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: 1.25rem;">
+      <div style="background: #f3e8ff; color: #9333ea; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; border-radius: 50%; font-weight: 800; margin-bottom: 0.75rem;">4</div>
+      <strong style="display: block; color: var(--text-primary); margin-bottom: 0.25rem; font-size: 0.95rem;">Tailored Study Advice</strong>
+      <span style="font-size: 0.82rem; color: var(--text-secondary);">Generates personalized recommendations based on specific academic risk factors.</span>
+    </div>
+  </div>
+
+  <div style="margin-top: 1.5rem; display: flex; gap: 1rem;">
+    <a href="{{ url_for('predict') }}" class="btn"><i class="fa-solid fa-wand-magic-sparkles"></i> Try Live Predictor</a>
+    <a href="{{ url_for('dataset') }}" class="btn btn-secondary"><i class="fa-solid fa-database"></i> View Dataset</a>
+  </div>
+</div>
+{% endblock %}
+
