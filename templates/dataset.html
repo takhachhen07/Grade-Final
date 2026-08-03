@@ -79,8 +79,8 @@
     {% if has_missing %}
     <div class="alert alert-warning">
       <i class="fa-solid fa-triangle-exclamation"></i> <strong>Missing Values Detected:</strong><br>
-      {% for col, count in raw_missing.items() if count > 0 %}
-        • {{ col }}: {{ count }} missing records<br>
+      {% for item in raw_missing_list %}
+        • {{ item.col }}: {{ item.count }} missing records<br>
       {% endfor %}
     </div>
     {% else %}
@@ -97,7 +97,7 @@
   <div class="card">
     <h2 style="font-size: 1.15rem; margin-top: 0; font-weight: 700;"><i class="fa-solid fa-file-csv" style="color: var(--primary);"></i> Upload Student CSV</h2>
     <p style="color: var(--text-secondary); font-size: 0.88rem;">
-      Upload a new student performance CSV file to update the dataset and retrain the prediction model automatically.
+      Upload a new student performance CSV file to update the dataset and automatically train the model using the optimal hyperparameter solution.
     </p>
 
     <form id="upload-csv-form" enctype="multipart/form-data">
@@ -106,7 +106,7 @@
         <input type="file" id="file" name="file" accept=".csv" class="form-control" required>
       </div>
       <button type="submit" class="btn btn-secondary" style="width: 100%; justify-content: center;">
-        <i class="fa-solid fa-upload"></i> Upload & Retrain Model
+        <i class="fa-solid fa-upload"></i> Upload & Auto-Train Model
       </button>
     </form>
   </div>

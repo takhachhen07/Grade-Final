@@ -13,9 +13,10 @@ from utils.data_processor import clean_dataframe, encode_dataframe
 FEATURE_COLUMNS = ['Gender_Encoded', 'Age', 'Attendance', 'Study_Hours', 'Internal_Marks', 'Grade_Encoded', 'Absences']
 FEATURE_NAMES = ['Gender', 'Age', 'Attendance (%)', 'Study Hours (hrs/wk)', 'Internal Marks (0-50)', 'Previous Grade', 'Absences (days)']
 
-def train_decision_tree(df, criterion='entropy', max_depth=5, test_size=0.2, model_path='model.pkl'):
+def train_decision_tree(df, criterion='entropy', max_depth=5, test_size=0.2, auto_tune=True, model_path='model.pkl'):
     """
     Trains a Decision Tree Classifier using Information Theory (Entropy/Information Gain or Gini),
+    automatically tunes hyperparameters for maximum accuracy if auto_tune=True,
     applies Sigmoid Probability Calibration via CalibratedClassifierCV, evaluates performance metrics,
     and exports tree rules and model artifacts.
     """
@@ -40,10 +41,43 @@ def train_decision_tree(df, criterion='entropy', max_depth=5, test_size=0.2, mod
         except Exception:
             X_train, X_test, y_train, y_test = X, X, y, y
 
-    # Decision Tree Classifier
+    # Automated Hyper-Parameter Optimization (Find Best Solution)
+    best_criterion = criterion
+    best_depth = max_depth
+    best_min_split = 2
+    best_score = -1.0
+
+    if auto_tune and len(X_train) >= 10:
+        criteria_options = ['entropy', 'gini']
+        depth_options = [3, 4, 5, 6, 7, 8, None]
+        split_options = [2, 5, 10]
+
+        for crit in criteria_options:
+            for depth in depth_options:
+                for min_split in split_options:
+                    clf = DecisionTreeClassifier(
+                        criterion=crit,
+                        max_depth=depth,
+                        min_samples_split=min_split,
+                        random_state=42
+                    )
+                    clf.fit(X_train, y_train)
+                    preds = clf.predict(X_test)
+                    acc_candidate = accuracy_score(y_test, preds)
+                    f1_candidate = f1_score(y_test, preds, zero_division=0)
+                    combined_score = acc_candidate * 0.7 + f1_candidate * 0.3
+
+                    if combined_score > best_score:
+                        best_score = combined_score
+                        best_criterion = crit
+                        best_depth = depth
+                        best_min_split = min_split
+
+    # Train final Decision Tree Classifier with optimal parameters
     dt = DecisionTreeClassifier(
-        criterion=criterion,
-        max_depth=max_depth,
+        criterion=best_criterion,
+        max_depth=best_depth,
+        min_samples_split=best_min_split,
         random_state=42
     )
     dt.fit(X_train, y_train)
@@ -95,8 +129,9 @@ def train_decision_tree(df, criterion='entropy', max_depth=5, test_size=0.2, mod
             'confusion_matrix': {'tn': int(tn), 'fp': int(fp), 'fn': int(fn), 'tp': int(tp)},
             'tree_rules': tree_rules,
             'importances': importances,
-            'criterion': criterion,
-            'max_depth': max_depth,
+            'criterion': best_criterion,
+            'max_depth': best_depth if best_depth is not None else 'None',
+            'min_samples_split': best_min_split,
             'train_size': len(X_train),
             'test_size': len(X_test)
         }

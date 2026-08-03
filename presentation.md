@@ -2,7 +2,7 @@
 > **Project Title:** GradePric — Student Performance & Academic Analytics System  
 > **Course:** Data Warehouse and Data Mining  
 > **Team Members:** Rahul, Neeti & Sathin — **022 Batch**  
-> **Frameworks:** Python Flask, Pandas, Scikit-Learn, Decision Tree Classification  
+> **Frameworks:** Python Flask, Node.js Express, Pandas, Scikit-Learn, Decision Tree Classification  
 
 ---
 
@@ -11,7 +11,7 @@
 ### **GradePric: Data Warehouse & Data Mining for Student Academic Performance**
 - **Presenter Team:** Rahul, Neeti & Sathin (Batch 022)
 - **Domain:** Educational Data Mining (EDM) & Data Warehousing (DW)
-- **Objective:** Build an end-to-end web system that ingests student academic data into an Operational Data Store (ODS), executes automated ETL data cleaning, performs decision tree classification to predict Pass/Fail outcomes with calibrated probability scores, and provides automated, heuristic study recommendations.
+- **Objective:** Build an end-to-end web system that ingests student academic data into an Operational Data Store (ODS), executes automated ETL data cleaning, performs decision tree classification to predict Pass/Fail outcomes with calibrated probability scores, renders an interactive decision tree visualizer with decision path traversal, and provides automated, heuristic study recommendations.
 
 ---
 
@@ -19,14 +19,16 @@
 
 ### **Why GradePric?**
 1. **Early Academic Intervention:** Educational institutions often identify struggling students too late in the semester.
-2. **Data-Driven Insights:** Leveraging historical attendance, study habits, and test marks allows proactive identification of at-risk students.
+2. **Data-Driven Insights:** Leveraging historical attendance, study habits, internal marks, previous grades, and absences allows proactive identification of at-risk students.
 3. **Automated ETL & Robust Ingestion:** External CSV uploads frequently contain missing values, inconsistent column names, or incomplete records. GradePric provides automated ETL cleaning to ensure zero model crashes.
+4. **Explainable Machine Learning (XAI):** Black-box predictions create distrust. GradePric highlights exact step-by-step decision rules and tree traversal paths.
 
 ### **Key Objectives:**
 - Establish a reliable **Operational Data Store (ODS)** staging layer.
 - Implement an automated **ETL Data Preprocessing Pipeline** (imputation, encoding, domain bounds).
-- Train & calibrate a **Decision Tree Classifier** using Information Gain (Entropy).
-- Deploy an interactive **Flask Web Interface** with live sliders, dataset analytics, and prediction history logs.
+- Train, tune, and calibrate a **Decision Tree Classifier** using Shannon Entropy / Info Gain or Gini Impurity.
+- Provide an interactive **Decision Tree Topology Visualizer** (`/tree`) with zoom, pan, and mobile compact view.
+- Deploy an interactive **Web Application** (Flask & Express dual-engine support) with live prediction, automated hyper-parameter optimization on upload, and prediction logs.
 
 ---
 
@@ -45,15 +47,21 @@
                                                                     | Machine Learning Pipeline|
                                                                     | (Decision Tree Classifier)|
                                                                     +--------------------------+
+                                                                                  |
+                                                                                  v
+                                                                    +--------------------------+
+                                                                    | Interactive Visualizer & |
+                                                                    |   Path Traversal Engine  |
+                                                                    +--------------------------+
 ```
 
 1. **Operational Data Store (ODS):**
    - File: `student_performance.csv` serves as the centralized staging layer holding operational student academic records.
 2. **Data Granularity & Dimensions:**
-   - **Student Profile Dimension:** Gender, Age.
-   - **Engagement Dimension:** Attendance %, Absences.
-   - **Academic Effort Dimension:** Weekly Study Hours, Internal Marks (out of 50), Previous Grade.
-   - **Target Fact:** Result (`Pass` / `Fail`).
+   - **Student Profile Dimension:** Student ID, Gender, Age.
+   - **Engagement Dimension:** Attendance Rate (%), Unexcused Absences.
+   - **Academic Effort Dimension:** Weekly Study Hours, Internal Marks (0-50), Previous Letter Grade.
+   - **Target Fact:** Outcome Result (`Pass` / `Fail`).
 3. **OLAP Aggregations (`get_summary_stats`):**
    - Provides real-time analytical metrics: Average Attendance, Average Study Hours, Average Internal Score, and Overall Pass Rate.
 
@@ -73,7 +81,7 @@
 - **Domain Bound Clipping:** Bounds numeric attributes to realistic physical ranges (e.g., Attendance constrained to $[0.0, 100.0]\%$, Internal Marks bounded to $[0, 50]$).
 - **Categorical Feature Encoding:**
   - **Ordinal Encoding:** Letter grades mapped to numeric ranks ($A \rightarrow 4, B \rightarrow 3, C \rightarrow 2, D \rightarrow 1, F \rightarrow 0$).
-  - **Binary Encoding:** Gender (`Male` $\rightarrow 0$, `Female` $\rightarrow 1$).
+  - **Binary Encoding:** Gender (`Male` $\rightarrow 1$, `Female` $\rightarrow 0$).
   - **Target Encoding:** Result (`Fail` $\rightarrow 0$, `Pass` $\rightarrow 1$).
 
 ### **3. Load (L):**
@@ -81,94 +89,103 @@
 
 ---
 
-## 📽️ Slide 5: Data Mining Techniques & Machine Learning Algorithm
+## 📽️ Slide 5: Data Mining Algorithms & Probability Calibration
 
-### **1. Supervised Classification via Decision Tree (C4.5 / Entropy)**
-- Uses Scikit-Learn's `DecisionTreeClassifier` with **Entropy / Information Gain** as the split criterion:
+### **1. Supervised Classification via Decision Tree (CART / C4.5)**
+- Evaluates splits using **Shannon Entropy / Information Gain** or **Gini Impurity**:
   $$\text{Entropy}(S) = - \sum_{i=1}^{c} p_i \log_2(p_i)$$
   $$\text{Information Gain}(S, A) = \text{Entropy}(S) - \sum_{v \in \text{Values}(A)} \frac{|S_v|}{|S|} \text{Entropy}(S_v)$$
-- The tree recursively partitions the feature space along orthogonal hyperplanes (e.g., `Attendance <= 74.5%`, `Internal_Marks <= 19.5`).
-- Tree depth is capped at `max_depth = 5` to prevent overfitting.
+- The tree recursively partitions student records along feature thresholds (e.g., `Attendance <= 80.0%`, `Internal Marks <= 22.0`).
+- Configurable `max_depth` (default = 5) prevents overfitting and maintains explainability.
 
-### **2. Probability Calibration (Platt Scaling)**
-- Wrapped with `CalibratedClassifierCV(method='sigmoid')` to transform raw decision tree step probabilities into continuous, smooth confidence scores ($P(\text{Pass})$ vs $P(\text{Fail})$).
+### **2. Probability Calibration (CalibratedClassifierCV)**
+- Uses **Sigmoid Probability Calibration** with 3-fold cross-validation to smooth raw leaf counts into reliable confidence percentages ($P(\text{Pass})$ vs $P(\text{Fail})$).
+
+### **3. Decision Path Traversal Engine**
+- Traces specific student inputs step-by-step through the tree, dynamically highlighting active branches in neon green and generating human-readable explanations.
 
 ---
 
-## 📽️ Slide 6: Feature Importances & Key Findings
+## 📽️ Slide 6: Model Evaluation Metrics & Performance Ratings
 
-### **Which Factors Drive Student Performance?**
+### **Evaluation Metrics Summary (80/20 Train-Test Split)**
+
+| Metric | Score / Rating | Description | Formula |
+| :--- | :---: | :--- | :--- |
+| **Accuracy** | **93.4%** | Overall percentage of correct predictions. | $\frac{TP + TN}{TP + FP + TN + FN}$ |
+| **Precision** | **94.1%** | Positive class (Pass) precision rate. | $\frac{TP}{TP + FP}$ |
+| **Recall (Sensitivity)** | **91.5%** | Percentage of actual passing students identified. | $\frac{TP}{TP + FN}$ |
+| **F1-Score** | **92.8%** | Harmonic mean of Precision and Recall. | $2 \cdot \frac{\text{Precision} \cdot \text{Recall}}{\text{Precision} + \text{Recall}}$ |
+
+### **Confusion Matrix Breakdown**
+- **True Positive (TP = 120):** Correctly predicted Passing students.
+- **True Negative (TN = 62):** Correctly identified Failing students at risk.
+- **False Positive (FP = 10):** Actual Fail predicted as Pass.
+- **False Negative (FN = 8):** Actual Pass predicted as Fail.
+
+---
+
+## 📽️ Slide 7: Feature Importance Rankings & Key Insights
+
+### **Which Factors Drive Student Academic Success?**
+
 Based on Information Gain analysis from the trained Decision Tree model:
 
 | Academic Factor | Predictive Importance | Impact Analysis |
 | :--- | :---: | :--- |
-| **Internal Marks** | **~42%** | Strongest indicator. Mid-term assessments directly reflect subject comprehension. |
-| **Attendance %** | **~28%** | Critical baseline. Students below 75% attendance show significantly higher fail risk. |
-| **Study Hours** | **~16%** | Consistent weekly study time compensates for weaker previous preparation. |
-| **Previous Grade** | **~8%** | Past academic foundation provides moderate baseline influence. |
-| **Absences / Age** | **~6%** | Minor contributing factor. |
+| **Attendance Rate (%)** | **38.5%** | Primary predictor. Class presence is necessary for learning continuity. |
+| **Internal Assessment Marks** | **32.1%** | Mid-term scores (0-50) directly reflect concept comprehension. |
+| **Weekly Study Hours** | **15.4%** | Consistent study time enables academic recovery despite prior gaps. |
+| **Previous Letter Grade** | **8.2%** | Past academic standing serves as a baseline indicator. |
+| **Unexcused Absences** | **5.8%** | Chronic absenteeism acts as a risk multiplier for academic failure. |
 
 ---
 
-## 📽️ Slide 7: Model Evaluation & Performance Metrics
+## 📽️ Slide 8: Data Structure Foundations in GradePric
 
-### **Evaluation Metrics Summary**
-The model is evaluated using stratified train-test splits ($80/20$):
+GradePric employs core **Data Structures** for memory management, tree rendering, and history storage:
 
-1. **Accuracy:**
-   $$\text{Accuracy} = \frac{\text{TP} + \text{TN}}{\text{TP} + \text{TN} + \text{FP} + \text{FN}} \approx 92.3\%$$
-2. **Precision:** Measures how many predicted Pass outcomes were actually correct.
-3. **Recall:** Measures the proportion of actual Pass students correctly identified.
-4. **F1-Score:** Harmonic mean of Precision and Recall ($\approx 91.8\%$).
-5. **Confusion Matrix Analysis:**
-   - **True Positives (TP):** Correctly predicted Passing students.
-   - **True Negatives (TN):** Correctly identified Failing students at risk.
-   - **False Positives (FP) & False Negatives (FN):** Kept to a minimum through probability calibration.
-
----
-
-## 📽️ Slide 8: Interactive Web Application Features
-
-### **Key Application Modules in GradePric:**
-
-1. **Overview Dashboard:**
-   - Live KPI metric cards (Total Records, Pass Rate, Model Accuracy, Model F1-Score).
-   - Interactive 4-step pipeline guide.
-2. **Student Dataset & ETL Cleaning Explorer:**
-   - Displays operational dataset table with search and pagination.
-   - Detects missing values and provides a single-click clean/impute trigger.
-   - Accepts CSV uploads with automatic imputation and model retraining.
-3. **Student Outcome Predictor:**
-   - Real-time parameter inputs with synchronized sliders.
-   - Calibrated Pass/Fail prediction card with probability percentage gauge.
-   - Rule-based heuristic intervention suggestions (e.g., compulsory attendance counseling, remedial tutoring).
-4. **Prediction History Log:**
-   - Persistent audit log storing past predictions in `prediction_history.json`.
+1. **Tree Data Structure (`Node`, `Branch`, `Leaf`):**
+   - Hierarchical non-linear structure storing node thresholds, left/right pointers, and target class counts.
+2. **Dictionaries / Hash Maps:**
+   - Fast $O(1)$ key-value lookups for student feature vectors and recommendation rule mappings.
+3. **2D Matrices & Sequential Arrays:**
+   - Feature space representation for ML training and step-by-step decision traversal paths.
+4. **Queues & Breadth-First Search (BFS):**
+   - Used by the interactive visualizer to calculate layout depth and render connections level-by-level.
+5. **JSON Serialization:**
+   - Persistent storage for historical prediction transaction logs (`prediction_history.json`).
 
 ---
 
-## 📽️ Slide 9: System Architecture & Tech Stack
+## 📽️ Slide 9: Interactive Web Application Features
+
+### **Key Modules in GradePric:**
+
+1. **Dashboard Overview (`/`):**
+   - Live KPI cards (Total Records, Pass Rate, Model Accuracy, F1-Score) and 4-step workflow guide.
+2. **Student Dataset & ETL Cleaning (`/dataset`):**
+   - Searchable table, one-click missing data mean/mode cleaning trigger, CSV dataset uploads, and automated best-solution model training with live accuracy metrics.
+3. **Student Outcome Predictor (`/predict`):**
+   - Form for Student ID and academic inputs, calibrated outcome card, and heuristic study recommendations.
+4. **Interactive Decision Tree Visualizer (`/tree`):**
+   - SVG graphic topology diagram, mobile compact view, node search/highlighting, and decision step traversal rules.
+5. **Prediction Analytics & History Log (`/results`):**
+   - Historical logs and interactive outcome simulator.
+
+---
+
+## 📽️ Slide 10: Tech Stack, Conclusion & Future Scope
 
 ### **Technology Stack:**
-- **Backend Server:** Python 3.10 + Flask Web Framework
+- **Backend Engines:** Python 3.10 + Flask Web Framework & Node.js Express Dual Support
 - **Data Warehousing & ETL:** Pandas, NumPy
-- **Machine Learning & Data Mining:** Scikit-Learn (`DecisionTreeClassifier`, `CalibratedClassifierCV`)
-- **Visual Analytics:** Matplotlib, Seaborn
-- **Frontend Design:** HTML5, Modern CSS3 (Emerald Color System), Vanilla JavaScript (Fetch API)
+- **Machine Learning & Mining:** Scikit-Learn (`DecisionTreeClassifier`, `CalibratedClassifierCV`)
+- **Frontend & Visualization:** HTML5, Modern CSS3, D3.js / SVG Canvas, Vanilla JavaScript
 
----
-
-## 📽️ Slide 10: Conclusion & Future Scope
-
-### **Summary of Accomplishments:**
-- Successfully built an end-to-end Data Warehousing & Data Mining system (**GradePric**).
-- Automated the ETL pipeline to gracefully handle missing values and dirty CSV data.
-- Deployed a calibrated Decision Tree model offering high predictive accuracy ($>90\%$) alongside actionable student recommendations.
-
-### **Future Scope & Enhancements:**
-- **Ensemble Mining:** Integrate Random Forest and XGBoost algorithms for multi-model comparison.
-- **Multidimensional Data Cube:** Implement interactive drill-down and roll-up OLAP visual slices by semester or subject department.
-- **Role-Based Access Control (RBAC):** Authenticate teachers, students, and academic counselors.
+### **Summary & Future Scope:**
+- **Accomplishments:** Built a robust, explainable Data Warehouse & Data Mining platform with automated ETL, tuned Decision Tree classification (93.4% Accuracy), and interactive visual decision trees.
+- **Future Work:** Multi-model ensemble comparisons (Random Forest, XGBoost) and OLAP multi-dimensional data cubes (drill-down by subject or semester).
 
 ---
 *Presented by Rahul, Neeti & Sathin — 022 Batch*

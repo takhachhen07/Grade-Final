@@ -22,7 +22,6 @@ env.addGlobal('url_for', (endpoint, options) => {
   if (endpoint === 'static') return `/static/${options.filename}`;
   if (endpoint === 'index') return '/';
   if (endpoint === 'dataset') return '/dataset';
-  if (endpoint === 'train') return '/train';
   if (endpoint === 'predict') return '/predict';
   if (endpoint === 'results') return '/results';
   if (endpoint === 'tree' || endpoint === 'decision_tree') return '/tree';
@@ -791,6 +790,9 @@ app.get('/dataset', (req, res) => {
   });
 
   const hasMissing = Object.values(rawMissing).some(v => v > 0);
+  const rawMissingList = Object.entries(rawMissing)
+    .filter(([_, count]) => count > 0)
+    .map(([col, count]) => ({ col, count }));
 
   res.render('dataset.html', {
     records: cleaned.slice(0, 100),
@@ -798,6 +800,7 @@ app.get('/dataset', (req, res) => {
     total_count: records.length,
     stats,
     raw_missing: rawMissing,
+    raw_missing_list: rawMissingList,
     has_missing: hasMissing
   });
 });
@@ -829,73 +832,6 @@ app.get('/results', (req, res) => {
   const history = getPredictionHistory();
 
   res.render('results.html', { metrics, history, stats });
-});
-
-app.get('/train', (req, res) => {
-  const results = {
-    criterion: 'entropy',
-    max_depth: 5,
-    test_size: 0.2,
-    accuracy: 93.4,
-    precision: 94.1,
-    recall: 91.5,
-    f1_score: 92.8,
-    confusion_matrix: { tp: 120, fp: 10, fn: 8, tn: 62 },
-    feature_importance: [
-      { feature: 'Attendance (%)', importance: 38.5 },
-      { feature: 'Internal Marks (0-50)', importance: 32.1 },
-      { feature: 'Study Hours (hrs/wk)', importance: 15.4 },
-      { feature: 'Previous Grade', importance: 8.2 },
-      { feature: 'Absences (days)', importance: 5.8 }
-    ],
-    tree_rules: `|--- Attendance Rate (%) <= 80.00
-|   |--- Internal Assessment Marks (0-50) <= 22.00
-|   |   |--- class: Fail
-|   |--- Internal Assessment Marks (0-50) > 22.00
-|   |   |--- Weekly Study Hours <= 9.00
-|   |   |   |--- class: Fail
-|   |   |--- Weekly Study Hours > 9.00
-|   |   |   |--- class: Pass
-|--- Attendance Rate (%) > 80.00
-|   |--- Internal Assessment Marks (0-50) <= 28.00
-|   |   |--- Unexcused Absences <= 6.00
-|   |   |   |--- class: Pass
-|   |   |--- Unexcused Absences > 6.00
-|   |   |   |--- class: Fail
-|   |--- Internal Assessment Marks (0-50) > 28.00
-|   |   |--- class: Pass`
-  };
-  res.render('train.html', { results });
-});
-
-app.post('/train', (req, res) => {
-  const criterion = req.body.criterion || 'entropy';
-  const max_depth = parseInt(req.body.max_depth) || 5;
-  const test_size = parseFloat(req.body.test_size) || 0.2;
-
-  const results = {
-    criterion,
-    max_depth,
-    test_size,
-    accuracy: 93.4,
-    precision: 94.1,
-    recall: 91.5,
-    f1_score: 92.8,
-    confusion_matrix: { tp: 120, fp: 10, fn: 8, tn: 62 },
-    feature_importance: [
-      { feature: 'Attendance (%)', importance: 38.5 },
-      { feature: 'Internal Marks (0-50)', importance: 32.1 },
-      { feature: 'Study Hours (hrs/wk)', importance: 15.4 },
-      { feature: 'Previous Grade', importance: 8.2 },
-      { feature: 'Absences (days)', importance: 5.8 }
-    ],
-    tree_rules: `|--- Attendance Rate (%) <= 80.00
-|   |--- Internal Assessment Marks (0-50) <= 22.00
-|   |   |--- class: Fail
-|   |--- Internal Assessment Marks (0-50) > 22.00
-|   |   |--- class: Pass`
-  };
-  res.render('train.html', { results });
 });
 
 app.get('/tree', (req, res) => {

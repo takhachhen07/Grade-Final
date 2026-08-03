@@ -119,9 +119,9 @@ student-performance-prediction/
 ├── model.pkl                  # Serialized Decision Tree Model
 ├── templates/
 │   ├── index.html             # Home Page
-│   ├── dataset.html           # Dataset Explorer & CSV Upload
-│   ├── train.html             # Model Training & Metrics
+│   ├── dataset.html           # Dataset Explorer, Data Cleaning & Auto-Train CSV Upload
 │   ├── predict.html           # Student Outcome Predictor Form
+│   ├── tree.html              # Interactive Decision Tree Visualizer
 │   └── results.html           # Visual Analytics & Reports
 ├── static/
 │   ├── css/

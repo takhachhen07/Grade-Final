@@ -46,9 +46,8 @@ GradePric supports both **Python Flask** and **Node.js Express** backends for lo
 ```
 
 ### Main Page Views
-- **Dashboard Overview (`/`):** Key metrics, overall pass rate, average scores, and pipeline summary.
-- **Student Dataset (`/dataset`):** View dataset records, execute automatic missing data cleaning (mean/mode imputation), and upload custom CSV files.
-- **Model Training (`/train`):** Configure hyper-parameters (Shannon Entropy vs. Gini Impurity, Max Depth, Test Split Ratio), retrain the Decision Tree, and view confusion matrices & feature importance rankings.
+- **Dashboard Overview (`/`):** Key metrics, overall pass rate, model accuracy, and pipeline summary.
+- **Student Dataset (`/dataset`):** View dataset records, execute automatic missing data cleaning (mean/mode imputation), and upload custom CSV files with automated best-solution model training.
 - **Predict Result (`/predict`):** Input student details, evaluate Pass/Fail probabilities, receive personalized recommendations, and trace decision traversal paths.
 - **Interactive Decision Tree (`/tree`):** Explore graphic decision tree diagrams, view mobile compact stacked hierarchy, and zoom/pan tree nodes.
 - **Prediction History Log (`/results`):** Access stored prediction transaction logs and clear history.
