@@ -16,31 +16,27 @@
 
 ---
 
-## 2. System Architecture & Dual-Engine Design
+## 2. System Architecture
 
-GradePric supports both **Python Flask** and **Node.js Express** backends for local and production deployment flexibility.
+GradePric is built with a **Python Flask** backend for machine learning data pipeline execution, serving an interactive **HTML, CSS, and JavaScript** frontend.
 
 ```
        +--------------------------------------------------------+
        |                  Web Browser / UI                      |
-       |  (Overview, Dataset, Model Training, Predict, Tree)   |
+       |  (Overview, Dataset, Predict, Tree, Results)           |
        +---------------------------+----------------------------+
                                    |
-                  +----------------+----------------+
-                  |                                 |
-                  v                                 v
-        +-------------------+             +--------------------+
-        |  Python Flask     |             |  Node.js Express   |
-        |  (app.py)         |             |  (server.js)       |
-        +---------+---------+             +---------+----------+
-                  |                                 |
-                  +----------------+----------------+
+                                   v
+                         +-------------------+
+                         |  Python Flask     |
+                         |  (app.py)         |
+                         +---------+---------+
                                    |
                                    v
              +--------------------------------------------+
              |         Dataset & Machine Learning         |
              |   - student_performance.csv                |
-             |   - scikit-learn Decision Tree / JS Engine |
+             |   - scikit-learn Decision Tree Classifier  |
              |   - prediction_history.json                |
              +--------------------------------------------+
 ```
@@ -164,8 +160,6 @@ The GradePric application utilizes fundamental **Data Structures** to manage mem
 
 ## 5. How to Run Locally
 
-### Option A: Running with Python Flask Backend (Recommended for Scikit-Learn ML)
-
 1. **Install Prerequisites:**
    Ensure Python 3.9+ is installed on your machine.
 
@@ -174,29 +168,9 @@ The GradePric application utilizes fundamental **Data Structures** to manage mem
    pip install -r requirements.txt
    ```
 
-3. **Start Flask Server:**
+3. **Start Flask Application:**
    ```bash
    python app.py
-   ```
-
-4. **Access Application:**
-   Open your browser and navigate to `http://localhost:3000` (or `http://localhost:5000`).
-
----
-
-### Option B: Running with Node.js / Express Backend
-
-1. **Install Prerequisites:**
-   Ensure Node.js v18+ is installed on your machine.
-
-2. **Install Dependencies:**
-   ```bash
-   npm install
-   ```
-
-3. **Start Express Server:**
-   ```bash
-   npm start
    ```
 
 4. **Access Application:**

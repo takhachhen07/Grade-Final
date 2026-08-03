@@ -2,7 +2,7 @@
 > **Project Title:** GradePric — Student Performance & Academic Analytics System  
 > **Course:** Data Warehouse and Data Mining  
 > **Team Members:** Rahul, Neeti & Sathin — **022 Batch**  
-> **Frameworks:** Python Flask, Node.js Express, Pandas, Scikit-Learn, Decision Tree Classification  
+> **Frameworks:** Python Flask, Pandas, Scikit-Learn, Decision Tree Classification  
 
 ---
 
@@ -28,7 +28,7 @@
 - Implement an automated **ETL Data Preprocessing Pipeline** (imputation, encoding, domain bounds).
 - Train, tune, and calibrate a **Decision Tree Classifier** using Shannon Entropy / Info Gain or Gini Impurity.
 - Provide an interactive **Decision Tree Topology Visualizer** (`/tree`) with zoom, pan, and mobile compact view.
-- Deploy an interactive **Web Application** (Flask & Express dual-engine support) with live prediction, automated hyper-parameter optimization on upload, and prediction logs.
+- Deploy an interactive **Web Application** (Python Flask backend with HTML/CSS/JS frontend) with live prediction, automated hyper-parameter optimization on upload, and prediction logs.
 
 ---
 
@@ -178,7 +178,7 @@ GradePric employs core **Data Structures** for memory management, tree rendering
 ## 📽️ Slide 10: Tech Stack, Conclusion & Future Scope
 
 ### **Technology Stack:**
-- **Backend Engines:** Python 3.10 + Flask Web Framework & Node.js Express Dual Support
+- **Backend Engine:** Python 3.10 + Flask Web Framework
 - **Data Warehousing & ETL:** Pandas, NumPy
 - **Machine Learning & Mining:** Scikit-Learn (`DecisionTreeClassifier`, `CalibratedClassifierCV`)
 - **Frontend & Visualization:** HTML5, Modern CSS3, D3.js / SVG Canvas, Vanilla JavaScript
