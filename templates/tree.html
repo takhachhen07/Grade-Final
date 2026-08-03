@@ -338,33 +338,33 @@
       <div style="display: flex; flex-direction: column; gap: 0.55rem;">
         <div class="eval-stat-row">
           <span class="eval-stat-label"><i class="fa-solid fa-id-card" style="color: var(--primary);"></i> Student ID</span>
-          <strong class="eval-stat-val" style="color: var(--primary); font-family: monospace;">{{ initial_inputs.student_id | default('STU-1001') }}</strong>
+          <strong class="eval-stat-val" style="color: var(--primary); font-family: monospace;">{{ initial_inputs.student_id if (initial_inputs is defined and initial_inputs and initial_inputs.student_id) else 'STU-1001' }}</strong>
         </div>
 
         <div class="eval-stat-row">
           <span class="eval-stat-label"><i class="fa-solid fa-clipboard-user" style="color: var(--primary);"></i> Attendance</span>
-          <strong class="eval-stat-val">{{ initial_inputs.attendance | default(80.0) }}%</strong>
+          <strong class="eval-stat-val">{{ initial_inputs.attendance if (initial_inputs is defined and initial_inputs and initial_inputs.attendance is defined) else 80.0 }}%</strong>
         </div>
 
         <div class="eval-stat-row">
           <span class="eval-stat-label"><i class="fa-solid fa-file-pen" style="color: var(--primary);"></i> Internal Marks</span>
-          <strong class="eval-stat-val">{{ initial_inputs.internal_marks | default(30.0) }} / 50</strong>
+          <strong class="eval-stat-val">{{ initial_inputs.internal_marks if (initial_inputs is defined and initial_inputs and initial_inputs.internal_marks is defined) else 30.0 }} / 50</strong>
         </div>
 
         <div class="eval-stat-row">
           <span class="eval-stat-label"><i class="fa-solid fa-book-open" style="color: var(--primary);"></i> Study Hours</span>
-          <strong class="eval-stat-val">{{ initial_inputs.study_hours | default(10.0) }} hrs/wk</strong>
+          <strong class="eval-stat-val">{{ initial_inputs.study_hours if (initial_inputs is defined and initial_inputs and initial_inputs.study_hours is defined) else 10.0 }} hrs/wk</strong>
         </div>
 
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.55rem;">
           <div class="eval-stat-card">
             <div style="font-size: 0.7rem; color: var(--text-secondary); margin-bottom: 0.1rem;"><i class="fa-solid fa-graduation-cap"></i> Prev Grade</div>
-            <strong style="font-size: 0.85rem; color: var(--text-primary);">Grade {{ initial_inputs.previous_grade | default('B') }}</strong>
+            <strong style="font-size: 0.85rem; color: var(--text-primary);">Grade {{ initial_inputs.previous_grade if (initial_inputs is defined and initial_inputs and initial_inputs.previous_grade) else 'B' }}</strong>
           </div>
 
           <div class="eval-stat-card">
             <div style="font-size: 0.7rem; color: var(--text-secondary); margin-bottom: 0.1rem;"><i class="fa-solid fa-user-xmark"></i> Absences</div>
-            <strong style="font-size: 0.85rem; color: var(--text-primary);">{{ initial_inputs.absences | default(3) }} days</strong>
+            <strong style="font-size: 0.85rem; color: var(--text-primary);">{{ initial_inputs.absences if (initial_inputs is defined and initial_inputs and initial_inputs.absences is defined) else 3 }} days</strong>
           </div>
         </div>
       </div>
@@ -894,12 +894,12 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   // Fetch student evaluation
-  const studentId = '{{ initial_inputs.student_id | default("STU-1001") }}';
-  const att = parseFloat('{{ initial_inputs.attendance | default(80.0) }}');
-  const im = parseFloat('{{ initial_inputs.internal_marks | default(30.0) }}');
-  const sh = parseFloat('{{ initial_inputs.study_hours | default(10.0) }}');
-  const pg = '{{ initial_inputs.previous_grade | default("B") }}';
-  const ab = parseInt('{{ initial_inputs.absences | default(3) }}') || 0;
+  const studentId = '{{ initial_inputs.student_id if (initial_inputs is defined and initial_inputs and initial_inputs.student_id) else "STU-1001" }}';
+  const att = parseFloat('{{ initial_inputs.attendance if (initial_inputs is defined and initial_inputs and initial_inputs.attendance is defined) else 80.0 }}');
+  const im = parseFloat('{{ initial_inputs.internal_marks if (initial_inputs is defined and initial_inputs and initial_inputs.internal_marks is defined) else 30.0 }}');
+  const sh = parseFloat('{{ initial_inputs.study_hours if (initial_inputs is defined and initial_inputs and initial_inputs.study_hours is defined) else 10.0 }}');
+  const pg = '{{ initial_inputs.previous_grade if (initial_inputs is defined and initial_inputs and initial_inputs.previous_grade) else "B" }}';
+  const ab = parseInt('{{ initial_inputs.absences if (initial_inputs is defined and initial_inputs and initial_inputs.absences is defined) else 3 }}') || 0;
 
   let activeNodeIds = ['node-0'];
 

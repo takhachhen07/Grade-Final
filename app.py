@@ -113,7 +113,15 @@ def results():
 @app.route('/tree')
 def tree():
     """Interactive Decision Tree Page."""
-    return render_template('tree.html')
+    initial_inputs = {
+        'student_id': request.args.get('student_id', 'STU-1001'),
+        'attendance': float(request.args.get('attendance', 80.0) or 80.0),
+        'internal_marks': float(request.args.get('internal_marks', 30.0) or 30.0),
+        'study_hours': float(request.args.get('study_hours', 10.0) or 10.0),
+        'previous_grade': request.args.get('previous_grade', 'B'),
+        'absences': int(float(request.args.get('absences', 3) or 3))
+    }
+    return render_template('tree.html', initial_inputs=initial_inputs)
 
 @app.route('/api/tree-data', methods=['GET', 'POST'])
 def api_tree_data():
