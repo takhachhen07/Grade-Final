@@ -26,7 +26,7 @@
 ### **Key Objectives:**
 - Establish a reliable **Operational Data Store (ODS)** staging layer.
 - Implement an automated **ETL Data Preprocessing Pipeline** (imputation, encoding, domain bounds).
-- Train, tune, and calibrate a **Decision Tree Classifier** using Shannon Entropy / Info Gain or Gini Impurity.
+- Train, tune, and calibrate a **Decision Tree Classifier** using Shannon Entropy / Information Gain.
 - Provide an interactive **Decision Tree Topology Visualizer** (`/tree`) with zoom, pan, and mobile compact view.
 - Deploy an interactive **Web Application** (Python Flask backend with HTML/CSS/JS frontend) with live prediction, automated hyper-parameter optimization on upload, and prediction logs.
 
@@ -39,7 +39,7 @@
 ```
 +--------------------------+      +--------------------------+      +--------------------------+
 |   Raw Data Ingestion     | ---> |  ETL Transformation      | ---> |  Operational Data Store  |
-|  (CSV Upload / Web Form) |      | (Cleaning & Encoding)    |      | (student_performance.csv)|
+| (CSV Upload / Web Form) |      | (Cleaning & Encoding)    |      | (uploaded_dataset.csv)   |
 +--------------------------+      +--------------------------+      +--------------------------+
                                                                                   |
                                                                                   v
@@ -56,7 +56,7 @@
 ```
 
 1. **Operational Data Store (ODS):**
-   - File: `student_performance.csv` serves as the centralized staging layer holding operational student academic records.
+   - File: `uploaded_dataset.csv` serves as the centralized staging layer holding operational student academic records uploaded by users.
 2. **Data Granularity & Dimensions:**
    - **Student Profile Dimension:** Student ID, Gender, Age.
    - **Engagement Dimension:** Attendance Rate (%), Unexcused Absences.
@@ -91,8 +91,8 @@
 
 ## 📽️ Slide 5: Data Mining Algorithms & Probability Calibration
 
-### **1. Supervised Classification via Decision Tree (CART / C4.5)**
-- Evaluates splits using **Shannon Entropy / Information Gain** or **Gini Impurity**:
+### **1. Supervised Classification via Decision Tree (C4.5 / ID3)**
+- Evaluates splits using **Shannon Entropy / Information Gain**:
   $$\text{Entropy}(S) = - \sum_{i=1}^{c} p_i \log_2(p_i)$$
   $$\text{Information Gain}(S, A) = \text{Entropy}(S) - \sum_{v \in \text{Values}(A)} \frac{|S_v|}{|S|} \text{Entropy}(S_v)$$
 - The tree recursively partitions student records along feature thresholds (e.g., `Attendance <= 80.0%`, `Internal Marks <= 22.0`).
@@ -133,11 +133,11 @@ Based on Information Gain analysis from the trained Decision Tree model:
 
 | Academic Factor | Percentage Contribution (%) | Impact Analysis |
 | :--- | :---: | :--- |
-| **Internal Assessment Marks** | **38.5%** | Primary predictor. Mid-term scores (0-50) directly reflect concept comprehension. |
-| **Weekly Study Hours** | **28.4%** | Consistent study time enables academic recovery and performance gain. |
-| **Attendance Rate (%)** | **18.2%** | Class presence is necessary for learning continuity and classroom engagement. |
-| **Previous Letter Grade** | **9.1%** | Past academic standing serves as a baseline performance indicator. |
-| **Unexcused Absences** | **5.8%** | Chronic absenteeism acts as a risk multiplier for academic failure. |
+| **Internal Assessment Marks** | **40.0%** | Primary predictor. Mid-term scores (0-50) directly reflect concept comprehension. |
+| **Weekly Study Hours** | **30.0%** | Consistent study time enables academic recovery and performance gain. |
+| **Attendance Rate (%)** | **20.0%** | Class presence is necessary for learning continuity and classroom engagement. |
+| **Previous Letter Grade** | **5.0%** | Past academic standing serves as a baseline performance indicator. |
+| **Unexcused Absences** | **5.0%** | Chronic absenteeism acts as a risk multiplier for academic failure. |
 
 ---
 

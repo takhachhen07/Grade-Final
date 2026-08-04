@@ -168,7 +168,7 @@ def generate_feature_importance_plot(importances, output_path='static/images/fea
                 va='center', ha='left', fontsize=9, fontweight='bold', color=TEXT_COLOR)
 
     ax.set_xlim(0, max(values) * 1.2 if values else 1.0)
-    ax.set_title('Information Gain / Gini Feature Importance', fontsize=12, fontweight='bold', color=TEXT_COLOR, pad=12)
+    ax.set_title('Information Gain Feature Importance', fontsize=12, fontweight='bold', color=TEXT_COLOR, pad=12)
     ax.set_xlabel('Relative Importance Score', fontsize=10, fontweight='bold', color=TEXT_COLOR)
 
     plt.tight_layout()

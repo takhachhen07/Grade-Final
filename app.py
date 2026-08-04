@@ -17,18 +17,19 @@ from utils.visualizer import generate_all_visualizations
 app = Flask(__name__)
 app.secret_key = 'edu_analytics_com470_secret_key'
 
-DATASET_PATH = 'student_performance.csv'
+DATASET_PATH = 'uploaded_dataset.csv'
 MODEL_PATH = 'model.pkl'
 
 def init_app():
-    """Initializes dataset, trains default Decision Tree model with auto-tuned best solution, and renders charts."""
-    df = get_dataset(DATASET_PATH)
-    if not df.empty:
-        artifact = load_model(MODEL_PATH)
-        if artifact is None:
-            print("Training initial Decision Tree Classifier with optimal parameters...")
-            artifact = train_decision_tree(df, auto_tune=True, model_path=MODEL_PATH)
-        generate_all_visualizations(df, artifact)
+    """Initializes dataset, trains Decision Tree model with uploaded CSV data if present, and renders charts."""
+    if os.path.exists(DATASET_PATH):
+        df = get_dataset(DATASET_PATH)
+        if not df.empty:
+            artifact = load_model(MODEL_PATH)
+            if artifact is None:
+                print("Training Decision Tree Classifier on uploaded CSV dataset...")
+                artifact = train_decision_tree(df, auto_tune=True, model_path=MODEL_PATH)
+            generate_all_visualizations(df, artifact)
 
 @app.route('/')
 def index():

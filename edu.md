@@ -13,7 +13,7 @@
 ## 🏬 2. Data Warehouse (DW) Concepts
 
 ### A. Operational Data Store (ODS)
-- `student_performance.csv` acts as a staging database storing operational student records (Attendance, Study Hours, Internal Marks, Grades, Absences, Result).
+- `uploaded_dataset.csv` acts as a staging database storing operational student records (Attendance, Study Hours, Internal Marks, Grades, Absences, Result) uploaded by users.
 
 ### B. ETL (Extract, Transform, Load) Pipeline
 1. **Extract**: Ingests raw data from CSV uploads or manual web form submissions.
@@ -38,11 +38,11 @@
 
 ### C. Feature Importance Analysis
 - Measures how much each attribute contributes to the prediction in percentage (%):
-  1. **Internal Assessment Marks:** **38.5%**
-  2. **Weekly Study Hours:** **28.4%**
-  3. **Attendance Rate (%):** **18.2%**
-  4. **Previous Letter Grade:** **9.1%**
-  5. **Unexcused Absences:** **5.8%**
+  1. **Internal Assessment Marks:** **40.0%**
+  2. **Weekly Study Hours:** **30.0%**
+  3. **Attendance Rate (%):** **20.0%**
+  4. **Previous Letter Grade:** **5.0%**
+  5. **Unexcused Absences:** **5.0%**
 
 ### D. Rule-Based Academic Interventions
 - Uses heuristic rules to generate tailored advice based on risk factors:

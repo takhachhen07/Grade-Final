@@ -35,7 +35,7 @@ GradePric is built with a **Python Flask** backend for machine learning data pip
                                    v
              +--------------------------------------------+
              |         Dataset & Machine Learning         |
-             |   - student_performance.csv                |
+             |   - uploaded_dataset.csv (from user CSV upload) |
              |   - scikit-learn Decision Tree Classifier  |
              |   - prediction_history.json                |
              +--------------------------------------------+
@@ -69,21 +69,38 @@ Real-world academic data often contains missing fields or raw letter grades that
 A **Decision Tree** works like a flowchart. Starting at a top root question, it splits student data into smaller branches based on threshold rules until reaching a final outcome (Pass or Fail).
 
 #### Splitting Criteria
-1. **Shannon Entropy & Information Gain ($H(S)$):**
-   Entropy measures the amount of uncertainty or "disorder" in a group of student outcomes:
-   $$H(S) = -\sum_{i=1}^{c} p_i \log_2(p_i)$$
-   - If a group has 100% Pass students, Entropy = **0.0** (pure).
-   - If a group has 50% Pass and 50% Fail students, Entropy = **1.0** (maximum uncertainty).
-   - **Information Gain ($IG$):** Measures how much entropy drops after splitting students by a feature (e.g., Attendance $\le 80\%$). The tree picks the split with the highest Information Gain.
-
-2. **Gini Impurity Index ($Gini(S)$):**
-   An alternative split measurement calculating the probability of incorrectly classifying a randomly chosen student:
-   $$Gini(S) = 1 - \sum_{i=1}^{c} p_i^2$$
+**Shannon Entropy & Information Gain ($H(S)$):**
+Entropy measures the amount of uncertainty or "disorder" in a group of student outcomes:
+$$H(S) = -\sum_{i=1}^{c} p_i \log_2(p_i)$$
+- If a group has 100% Pass students, Entropy = **0.0** (pure).
+- If a group has 50% Pass and 50% Fail students, Entropy = **1.0** (maximum uncertainty).
+- **Information Gain ($IG$):** Measures how much entropy drops after splitting students by a feature (e.g., Attendance $\le 80\%$). The tree picks the split with the highest Information Gain.
 
 ---
 
-### C. Probability Calibration (CalibratedClassifierCV)
-Standard decision trees assign identical discrete probabilities to all samples in a leaf node. GradePric applies **Sigmoid Probability Calibration** (`CalibratedClassifierCV` with 3-fold cross-validation) to transform raw leaf counts into smooth, realistic confidence percentages (e.g., 88.4% Pass Probability).
+### C. Pass / Fail Confidence Level & Probability Calculation
+In GradePric, the confidence level for a student's Pass or Fail prediction is derived directly from the **Decision Tree Leaf Node** reached at the end of the decision traversal path. This ensures 100% mathematical consistency between the decision tree visualization and the output prediction.
+
+#### Detailed Calculation Steps:
+1. **Tree Traversal Path Evaluation:**
+   The student's input features (e.g., Attendance = 85.0%, Internal Marks = 38/50, Weekly Study Hours = 12h) evaluate sequentially through decision node threshold splits (e.g., `Attendance > 80.0%` $\rightarrow$ `Internal Marks > 28.0` $\rightarrow$ `Study Hours > 7.5`).
+
+2. **Leaf Node Sample Class Ratio:**
+   When the traversal reaches a terminal **Leaf Node**, the tree examines the proportion of training dataset samples ($N$) that fall into that specific leaf node:
+   $$\text{Confidence (\%)} = \left( \frac{N_{\text{majority\_class}}}{N_{\text{total\_leaf\_samples}}} \right) \times 100\%$$
+   - **Example:** If a leaf node contains 45 training student records, where 44 students passed and 1 failed, the majority class is **Pass** with a confidence score of:
+     $$\text{Confidence} = \left( \frac{44}{45} \right) \times 100\% = 97.8\%$$
+
+3. **Complementary Outcome Probability Derivation:**
+   The system maps the majority outcome and confidence level to the final Pass and Fail probabilities:
+   - **If Outcome is "Pass":**
+     $$\text{Pass Probability} = \text{Confidence (\%)}$$
+     $$\text{Fail Probability} = 100\% - \text{Pass Probability}$$
+   - **If Outcome is "Fail":**
+     $$\text{Fail Probability} = \text{Confidence (\%)}$$
+     $$\text{Pass Probability} = 100\% - \text{Fail Probability}$$
+
+This direct mapping guarantees that the leaf confidence score displayed in the Decision Tree Traversal diagram perfectly matches the Pass/Fail probability displayed on the prediction summary card.
 
 ---
 
@@ -108,11 +125,11 @@ To measure model accuracy, the dataset is split into **Training** (80%) and **Te
 
 ### E. Feature Importance Rankings
 The decision tree measures how significantly each attribute contributes to reducing dataset entropy (% contribution to prediction):
-1. **Internal Assessment Marks (0-50):** **38.5%** contribution (Direct measure of continuous academic performance and concept mastery).
-2. **Weekly Study Hours:** **28.4%** contribution (Indicator of sustained learning effort and study discipline).
-3. **Attendance Rate (%):** **18.2%** contribution (Key measure of classroom engagement and learning continuity).
-4. **Previous Letter Grade:** **9.1%** contribution (Historical academic baseline performance indicator).
-5. **Unexcused Absences (days):** **5.8%** contribution (Absenteeism risk factor and engagement metric).
+1. **Internal Assessment Marks (0-50):** **40.0%** contribution (Direct measure of continuous academic performance and concept mastery).
+2. **Weekly Study Hours:** **30.0%** contribution (Indicator of sustained learning effort and study discipline).
+3. **Attendance Rate (%):** **20.0%** contribution (Key measure of classroom engagement and learning continuity).
+4. **Previous Letter Grade:** **5.0%** contribution (Historical academic baseline performance indicator).
+5. **Unexcused Absences (days):** **5.0%** contribution (Absenteeism risk factor and engagement metric).
 
 ---
 

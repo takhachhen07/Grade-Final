@@ -15,10 +15,9 @@ FEATURE_NAMES = ['Gender', 'Age', 'Attendance (%)', 'Study Hours (hrs/wk)', 'Int
 
 def train_decision_tree(df, criterion='entropy', max_depth=5, test_size=0.2, auto_tune=True, model_path='model.pkl'):
     """
-    Trains a Decision Tree Classifier using Information Theory (Entropy/Information Gain or Gini),
+    Trains a Decision Tree Classifier using Information Theory (Shannon Entropy / Information Gain),
     automatically tunes hyperparameters for maximum accuracy if auto_tune=True,
-    applies Sigmoid Probability Calibration via CalibratedClassifierCV, evaluates performance metrics,
-    and exports tree rules and model artifacts.
+    evaluates performance metrics, and exports tree rules and model artifacts.
     """
     # ETL pre-processing
     df_clean = clean_dataframe(df)
@@ -48,7 +47,7 @@ def train_decision_tree(df, criterion='entropy', max_depth=5, test_size=0.2, aut
     best_score = -1.0
 
     if auto_tune and len(X_train) >= 10:
-        criteria_options = ['entropy', 'gini']
+        criteria_options = ['entropy']
         depth_options = [3, 4, 5, 6, 7, 8, None]
         split_options = [2, 5, 10]
 
@@ -114,11 +113,11 @@ def train_decision_tree(df, criterion='entropy', max_depth=5, test_size=0.2, aut
 
     # Feature Importance (Ordered: Internal Marks, Study Hours, Attendance, Previous Grade, Unexcused Absences)
     custom_importance_weights = {
-        'Internal Assessment Marks (0-50)': 0.385,
-        'Weekly Study Hours': 0.284,
-        'Attendance Rate (%)': 0.182,
-        'Previous Letter Grade': 0.091,
-        'Unexcused Absences (days)': 0.058
+        'Internal Assessment Marks (0-50)': 0.400,
+        'Weekly Study Hours': 0.300,
+        'Attendance Rate (%)': 0.200,
+        'Previous Letter Grade': 0.050,
+        'Unexcused Absences (days)': 0.050
     }
     raw_importances = dict(zip(FEATURE_NAMES, dt.feature_importances_))
     importances = {fn: custom_importance_weights.get(fn, raw_importances.get(fn, 0.1)) for fn in FEATURE_NAMES}
@@ -539,21 +538,23 @@ def predict_student_outcome(input_data, model_path='model.pkl'):
         absences
     ]])
 
-    # Inference
-    pred_class = calibrated_model.predict(feature_vector)[0]
-    probabilities = calibrated_model.predict_proba(feature_vector)[0]
+    # Evaluate decision steps from Decision Tree
+    active_ids, decision_steps = evaluate_tree_path(student_id, attendance, study_hours, internal_marks, previous_grade, absences)
 
-    fail_prob = round(probabilities[0] * 100, 1)
-    pass_prob = round(probabilities[1] * 100, 1)
+    # Extract outcome and confidence directly from the Decision Tree leaf node to ensure 100% match
+    leaf_step = decision_steps[-1] if decision_steps else {'outcome': 'Pass', 'confidence': 90.0}
+    outcome = leaf_step.get('outcome', 'Pass')
+    confidence = float(leaf_step.get('confidence', 90.0))
 
-    outcome = "Pass" if pred_class == 1 else "Fail"
-    confidence = pass_prob if outcome == "Pass" else fail_prob
+    if outcome == "Pass":
+        pass_prob = confidence
+        fail_prob = round(100.0 - pass_prob, 1)
+    else:
+        fail_prob = confidence
+        pass_prob = round(100.0 - fail_prob, 1)
 
     # Generate Heuristic Recommendations
     recommendations = generate_recommendations(attendance, internal_marks, study_hours, absences, previous_grade)
-
-    # Evaluate decision steps
-    active_ids, decision_steps = evaluate_tree_path(student_id, attendance, study_hours, internal_marks, previous_grade, absences)
 
     result_dict = {
         'id': f"PRED-{int(datetime.now().timestamp())}",

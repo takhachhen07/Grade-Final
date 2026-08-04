@@ -49,13 +49,13 @@ The tree breaks down a large dataset into small, pure groups step-by-step.
 
 ---
 
-## 3. How the Tree Learns: Entropy vs. Gini Index
+## 3. How the Tree Learns: Shannon Entropy & Information Gain
 
 How does the algorithm decide which feature (e.g., Attendance vs. Study Hours) to test first? It measures **Impurity** (how mixed up the Pass/Fail student records are).
 
-Our model trains exclusively using **Shannon Entropy** or **Gini Impurity Index**:
+Our model trains exclusively using **Shannon Entropy**:
 
-### A. Shannon Entropy $H(S)$ (Information Impurity)
+### Shannon Entropy $H(S)$ (Information Impurity)
 Entropy measures the amount of disorder or uncertainty in a node:
 * **Entropy = 1.0 (Highest Impurity):** Equal 50/50 mix of Pass and Fail students (maximum uncertainty).
 * **Entropy = 0.0 (Pure Node):** All students in the node are 100% Pass or 100% Fail.
@@ -64,19 +64,12 @@ $$H(S) = - \sum_{i} p_i \log_2(p_i)$$
 
 > **Goal:** Select the feature threshold that maximizes **Information Gain** (the largest reduction in entropy).
 
-### B. Gini Impurity Index $Gini(S)$
-Gini measures the probability of misclassifying a randomly chosen student sample:
-* **Gini = 0.5:** Maximum impurity (equal mix of Pass and Fail).
-* **Gini = 0.0:** Completely pure leaf node.
-
-$$Gini(S) = 1 - \sum_{i} (p_i)^2$$
-
 ---
 
-## 4. Step-by-Step Training Algorithm (CART & C4.5)
+## 4. Step-by-Step Training Algorithm (C4.5 & ID3)
 
 1. **Start at Root:** Gather all student dataset records (e.g., 500 profiles).
-2. **Evaluate Candidate Splits:** Calculate Information Gain or Gini reduction for every metric (Attendance, Internal Marks, Study Hours, Absences).
+2. **Evaluate Candidate Splits:** Calculate Information Gain reduction for every metric (Attendance, Internal Marks, Study Hours, Absences).
 3. **Pick Best Split:** Select the feature and threshold with the highest gain (e.g., `Attendance ≤ 80%`).
 4. **Partition Data:** Divide the student dataset into Left and Right branch subsets.
 5. **Recursion:** Apply the same splitting rules to each sub-branch until:
@@ -103,5 +96,5 @@ When a student's metrics are submitted for prediction:
 | :--- | :--- | :--- |
 | **Feature** | Input variables (Attendance, Marks, Study Hours) | Clues in a guessing game |
 | **Split Point** | The cutoff numerical value (e.g., 75.0%) | The line between YES and NO |
-| **Entropy / Gini** | Mathematical measure of data disorder | How mixed up the stack of cards is |
+| **Shannon Entropy** | Mathematical measure of data disorder & uncertainty | How mixed up the stack of cards is |
 | **Leaf Node** | Final classification outcome | The final answer card |

@@ -32,8 +32,8 @@ Predicting student academic performance enables early identification of at-risk 
 
 ---
 
-## 📊 Dataset Description (`student_performance.csv`)
-The project includes a realistic dataset containing **500 student records** with 9 key features:
+## 📊 Dataset Analysis (Uploaded CSV Dataset)
+The project analyzes student performance records uploaded via the web interface (`uploaded_dataset.csv`) with the following key features:
 
 | Feature Name | Type | Description / Range |
 | :--- | :--- | :--- |
@@ -63,18 +63,18 @@ The project includes a realistic dataset containing **500 student records** with
 ---
 
 ## 🌳 Decision Tree Algorithm Explanation
-The **Decision Tree Classifier** is a non-parametric supervised learning algorithm used for classification. It splits data recursively based on feature thresholds that maximize class purity, measured using **Gini Impurity**:
+The **Decision Tree Classifier** is a supervised learning algorithm used for classification. It splits data recursively based on feature thresholds that maximize class purity, measured using **Shannon Entropy**:
 
-$$Gini(D) = 1 - \sum_{i=1}^{k} p_i^2$$
+$$H(D) = -\sum_{i=1}^{k} p_i \log_2(p_i)$$
 
-Where $p_i$ is the probability of an item belonging to class $i$. The feature with the highest **Information Gain** (or lowest Gini Impurity) becomes the split node.
+Where $p_i$ is the probability of an item belonging to class $i$. The feature with the highest **Information Gain** becomes the split node.
 
 ### 📈 Feature Contribution Percentage (%)
-1. **Internal Assessment Marks:** **38.5%**
-2. **Weekly Study Hours:** **28.4%**
-3. **Attendance Rate (%):** **18.2%**
-4. **Previous Letter Grade:** **9.1%**
-5. **Unexcused Absences:** **5.8%**
+1. **Internal Assessment Marks:** **40.0%**
+2. **Weekly Study Hours:** **30.0%**
+3. **Attendance Rate (%):** **20.0%**
+4. **Previous Letter Grade:** **5.0%**
+5. **Unexcused Absences:** **5.0%**
 
 ---
 
@@ -121,8 +121,7 @@ student-performance-prediction/
 │
 ├── app.py                     # Flask Web Backend & ML Pipeline
 ├── requirements.txt           # Python Dependencies
-├── generate_data.py           # Script generating student_performance.csv
-├── student_performance.csv    # 500-record dataset
+├── uploaded_dataset.csv        # Staged dataset from user CSV upload
 ├── model.pkl                  # Serialized Decision Tree Model
 ├── templates/
 │   ├── index.html             # Home Page

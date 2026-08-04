@@ -1,20 +1,18 @@
 import os
 import pandas as pd
 import numpy as np
-from generate_data import generate_csv_data
 
-def get_dataset(filepath='student_performance.csv'):
-    """Extract operational dataset from ODS CSV staging. Auto-generates if file is missing."""
+def get_dataset(filepath='uploaded_dataset.csv'):
+    """Extract operational dataset from uploaded CSV file. Returns empty DataFrame if no file is uploaded yet."""
     if not os.path.exists(filepath):
-        print(f"Dataset file {filepath} not found. Auto-generating dataset...")
-        generate_csv_data(filepath)
+        print(f"Dataset file {filepath} not found. Awaiting CSV file upload...")
+        return pd.DataFrame()
 
     try:
         df = pd.read_csv(filepath)
         if df.empty:
-            print(f"Dataset file {filepath} is empty. Auto-regenerating dataset...")
-            generate_csv_data(filepath)
-            df = pd.read_csv(filepath)
+            print(f"Dataset file {filepath} is empty.")
+            return pd.DataFrame()
         return df
     except Exception as e:
         print(f"Error reading dataset from {filepath}: {e}")
@@ -145,18 +143,42 @@ def encode_dataframe(df):
     return df_encoded
 
 def get_summary_stats(df):
-    """Generates OLAP multidimensional summary statistics."""
+    """Generates OLAP multidimensional summary statistics safely."""
+    if df is None or df.empty:
+        return {
+            'total_records': 0,
+            'pass_count': 0,
+            'fail_count': 0,
+            'pass_rate': 0.0,
+            'avg_attendance': 0.0,
+            'avg_study_hours': 0.0,
+            'avg_internal_marks': 0.0,
+            'avg_absences': 0.0
+        }
+
     df_clean = clean_dataframe(df)
     total_records = len(df_clean)
+
+    if total_records == 0 or 'Result' not in df_clean.columns:
+        return {
+            'total_records': 0,
+            'pass_count': 0,
+            'fail_count': 0,
+            'pass_rate': 0.0,
+            'avg_attendance': 0.0,
+            'avg_study_hours': 0.0,
+            'avg_internal_marks': 0.0,
+            'avg_absences': 0.0
+        }
 
     pass_count = len(df_clean[df_clean['Result'] == 'Pass'])
     fail_count = len(df_clean[df_clean['Result'] == 'Fail'])
     pass_rate = round((pass_count / total_records) * 100, 1) if total_records > 0 else 0.0
 
-    avg_attendance = round(df_clean['Attendance'].mean(), 1) if 'Attendance' in df_clean.columns else 0.0
-    avg_study_hours = round(df_clean['Study_Hours'].mean(), 1) if 'Study_Hours' in df_clean.columns else 0.0
-    avg_internal_marks = round(df_clean['Internal_Marks'].mean(), 1) if 'Internal_Marks' in df_clean.columns else 0.0
-    avg_absences = round(df_clean['Absences'].mean(), 1) if 'Absences' in df_clean.columns else 0.0
+    avg_attendance = round(df_clean['Attendance'].mean(), 1) if 'Attendance' in df_clean.columns and not df_clean['Attendance'].isnull().all() else 0.0
+    avg_study_hours = round(df_clean['Study_Hours'].mean(), 1) if 'Study_Hours' in df_clean.columns and not df_clean['Study_Hours'].isnull().all() else 0.0
+    avg_internal_marks = round(df_clean['Internal_Marks'].mean(), 1) if 'Internal_Marks' in df_clean.columns and not df_clean['Internal_Marks'].isnull().all() else 0.0
+    avg_absences = round(df_clean['Absences'].mean(), 1) if 'Absences' in df_clean.columns and not df_clean['Absences'].isnull().all() else 0.0
 
     return {
         'total_records': total_records,
