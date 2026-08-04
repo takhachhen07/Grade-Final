@@ -78,7 +78,7 @@ def association_rules():
 def clustering():
     """K-Means Cluster Analysis View."""
     df = get_dataset(DATASET_PATH)
-    k = int(request.args.get('k', 3) or 3)
+    k = 3
     cluster_res = run_kmeans_clustering(df, n_clusters=k)
     return render_template('clustering.html', clustering=cluster_res, k=k)
 

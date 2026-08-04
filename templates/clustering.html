@@ -10,30 +10,19 @@
   </div>
 </div>
 
-<!-- Clustering Controls -->
-<div class="card" style="margin-bottom: 1.5rem;">
-  <h2 style="font-size: 1.1rem; margin-top: 0; margin-bottom: 1rem; font-weight: 700; color: var(--text-primary);">
-    <i class="fa-solid fa-sliders" style="color: var(--primary);"></i> Cluster Configuration
-  </h2>
-
-  <form method="GET" action="{{ url_for('clustering') }}" style="display: flex; gap: 1rem; align-items: flex-end; flex-wrap: wrap;">
-    <div style="flex: 1; min-width: 200px;">
-      <label style="font-size: 0.82rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; display: block; margin-bottom: 0.4rem;">
-        Number of Clusters (K = {{ k }})
-      </label>
-      <select name="k" class="form-control">
-        {% for val in [2, 3, 4, 5, 6] %}
-          <option value="{{ val }}" {% if k == val %}selected{% endif %}>K = {{ val }} Behavioral Clusters</option>
-        {% endfor %}
-      </select>
-    </div>
-
-    <div>
-      <button type="submit" class="btn" style="height: 42px;">
-        <i class="fa-solid fa-play"></i> Re-Cluster Student Profiles
-      </button>
-    </div>
-  </form>
+<!-- Clustering Info Header -->
+<div class="card" style="margin-bottom: 1.5rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+  <div>
+    <h2 style="font-size: 1.1rem; margin-top: 0; margin-bottom: 0.3rem; font-weight: 700; color: var(--text-primary);">
+      <i class="fa-solid fa-diagram-project" style="color: var(--primary);"></i> Tri-Cluster Segmentation (K = 3)
+    </h2>
+    <p style="margin: 0; font-size: 0.85rem; color: var(--text-secondary);">
+      The student population is segmented into exactly 3 distinct behavioral clusters based on standardized attendance, study hours, internal marks, and absence records.
+    </p>
+  </div>
+  <div>
+    <span class="badge badge-pass" style="font-size: 0.85rem; padding: 0.5rem 0.85rem;"><i class="fa-solid fa-check-double"></i> Fixed K = 3 Solution</span>
+  </div>
 </div>
 
 <!-- Cluster Profiles Cards -->

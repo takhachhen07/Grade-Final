@@ -61,13 +61,17 @@ The application is built on a **Python Flask** backend executing data warehousin
 ---
 
 ### B. Module 2: OLAP Data Cube Engine
-The OLAP engine constructs a multidimensional data cube over student attributes:
-- **Dimensions:** Previous Grade, Attendance Tier (Low/Moderate/High), Study Hours Tier (Low/Moderate/High), Gender.
-- **Measures Evaluated:** Cell Record Count, Pass Count, Fail Count, Pass Rate (%), Mean Attendance, Mean Study Hours, Mean Internal Marks, Mean Absences.
-- **Operations:**
-  - **Slice:** Filter the cube on a single dimension value (e.g., `Slice: Gender = Male`).
-  - **Dice:** Select a sub-cube by applying multi-dimensional filters.
-  - **Roll-Up / Drill-Down:** Aggregate or disaggregate metrics across selected dimension hierarchies.
+The OLAP (Online Analytical Processing) engine constructs a multidimensional data cube over student attributes to evaluate complex summary metrics across multiple perspectives simultaneously.
+*(For a complete beginner-friendly deep dive into OLAP concepts, see [olap.md](olap.md)).*
+
+- **Dimensions (Categorical Perspective Axes):** Previous Grade (A/B/C/D), Attendance Tier (`Low <70%`, `Moderate 70-85%`, `High >85%`), Study Hours Tier (`Low <8h`, `Moderate 8-15h`, `High >15h`), Gender.
+- **Measures Evaluated (Numerical Summaries):** Cell Record Count, Pass Count, Fail Count, Pass Rate (%), Mean Attendance, Mean Study Hours, Mean Internal Marks, Mean Absences.
+- **5 Fundamental OLAP Operations Implemented:**
+  1. **Slice (Cutting 1 Slice):** Filters the cube on a single dimension value (e.g., `Slice: Gender = Male`).
+  2. **Dice (Sub-Cube Extraction):** Selects a smaller sub-cube by applying multi-dimensional filters simultaneously (e.g., `Previous_Grade = B` AND `Attendance_Tier = High`).
+  3. **Roll-Up (Zooming Out):** Aggregates granular metrics up to higher-level summary categories (e.g., grouping student scores into broad Attendance Tiers).
+  4. **Drill-Down (Zooming In):** Disaggregates high-level summary metrics down to deeper detail by adding dimensions.
+  5. **Pivot (Rotation):** Rotates the dimensional axes to view the exact same matrix from a different perspective.
 
 ---
 
