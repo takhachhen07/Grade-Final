@@ -37,7 +37,12 @@
 - Applies probability calibration (Platt Scaling) to convert raw tree splits into smooth, realistic Pass/Fail probability scores ($0–100\%$).
 
 ### C. Feature Importance Analysis
-- Measures which factors impact academic performance the most (e.g., Internal Assessment Marks and Weekly Study Hours are the strongest indicators).
+- Measures how much each attribute contributes to the prediction in percentage (%):
+  1. **Internal Assessment Marks:** **38.5%**
+  2. **Weekly Study Hours:** **28.4%**
+  3. **Attendance Rate (%):** **18.2%**
+  4. **Previous Letter Grade:** **9.1%**
+  5. **Unexcused Absences:** **5.8%**
 
 ### D. Rule-Based Academic Interventions
 - Uses heuristic rules to generate tailored advice based on risk factors:

@@ -107,12 +107,12 @@ To measure model accuracy, the dataset is split into **Training** (80%) and **Te
 ---
 
 ### E. Feature Importance Rankings
-The decision tree measures how significantly each attribute contributes to reducing dataset entropy:
-1. **Internal Assessment Marks (0-50):** Direct measure of continuous academic performance and concept mastery.
-2. **Weekly Study Hours:** Indicator of sustained learning effort and academic recovery.
-3. **Attendance Rate (%):** Key measure of classroom engagement and learning continuity.
-4. **Previous Letter Grade:** Historical academic baseline performance indicator.
-5. **Unexcused Absences (days):** Absenteeism risk factor and engagement metric.
+The decision tree measures how significantly each attribute contributes to reducing dataset entropy (% contribution to prediction):
+1. **Internal Assessment Marks (0-50):** **38.5%** contribution (Direct measure of continuous academic performance and concept mastery).
+2. **Weekly Study Hours:** **28.4%** contribution (Indicator of sustained learning effort and study discipline).
+3. **Attendance Rate (%):** **18.2%** contribution (Key measure of classroom engagement and learning continuity).
+4. **Previous Letter Grade:** **9.1%** contribution (Historical academic baseline performance indicator).
+5. **Unexcused Absences (days):** **5.8%** contribution (Absenteeism risk factor and engagement metric).
 
 ---
 

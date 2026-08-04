@@ -69,6 +69,13 @@ $$Gini(D) = 1 - \sum_{i=1}^{k} p_i^2$$
 
 Where $p_i$ is the probability of an item belonging to class $i$. The feature with the highest **Information Gain** (or lowest Gini Impurity) becomes the split node.
 
+### 📈 Feature Contribution Percentage (%)
+1. **Internal Assessment Marks:** **38.5%**
+2. **Weekly Study Hours:** **28.4%**
+3. **Attendance Rate (%):** **18.2%**
+4. **Previous Letter Grade:** **9.1%**
+5. **Unexcused Absences:** **5.8%**
+
 ---
 
 ## 🚀 How to Run Locally
