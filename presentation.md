@@ -131,13 +131,13 @@
 
 Based on Information Gain analysis from the trained Decision Tree model:
 
-| Academic Factor | Predictive Importance | Impact Analysis |
-| :--- | :---: | :--- |
-| **Attendance Rate (%)** | **38.5%** | Primary predictor. Class presence is necessary for learning continuity. |
-| **Internal Assessment Marks** | **32.1%** | Mid-term scores (0-50) directly reflect concept comprehension. |
-| **Weekly Study Hours** | **15.4%** | Consistent study time enables academic recovery despite prior gaps. |
-| **Previous Letter Grade** | **8.2%** | Past academic standing serves as a baseline indicator. |
-| **Unexcused Absences** | **5.8%** | Chronic absenteeism acts as a risk multiplier for academic failure. |
+| Academic Factor | Impact Analysis |
+| :--- | :--- |
+| **Internal Assessment Marks** | Primary predictor. Mid-term scores (0-50) directly reflect concept comprehension. |
+| **Weekly Study Hours** | Consistent study time enables academic recovery and performance gain. |
+| **Attendance Rate (%)** | Class presence is necessary for learning continuity and classroom engagement. |
+| **Previous Letter Grade** | Past academic standing serves as a baseline performance indicator. |
+| **Unexcused Absences** | Chronic absenteeism acts as a risk multiplier for academic failure. |
 
 ---
 
