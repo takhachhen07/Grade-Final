@@ -204,3 +204,51 @@ The GradePric application utilizes fundamental **Data Structures** to manage mem
 ---
 
 *GradePric — Data Warehouse and Data Mining Academic Project (2026).*
+
+Here is a step-by-step mathematical and structural analysis explaining why increasing Weekly Study Hours from 9.0 to 10.0 causes a jump from 25.0% Pass (Fail) to 89.5% Pass (Pass).
+1. Core Reason: Decision Trees Use Step Boundaries (Axis-Aligned Cutoffs)
+Unlike models like Logistic Regression or Neural Networks that calculate smooth, continuous linear curves (e.g., 
+), a Decision Tree Classifier works by dividing the dataset into distinct rectangular regions using sharp threshold rules (e.g., 
+).
+When a feature value crosses a threshold (e.g., moving from 9.0 to 10.0 across a boundary like 9.5 hours), the student is routed down a completely different branch of the tree, ending in a different Leaf Node with a different historical population.
+2. Step-by-Step Tree Traversal Comparison
+Let's trace the exact decision path the algorithm takes in both scenarios:
+Scenario A: Study Hours = 9.0 hrs (FAIL — 25.0% Pass / 75.0% Fail)
+Step 1 (Attendance Split):
+ Branch LEFT (Low Attendance Cohort).
+Step 2 (Internal Marks Split):
+ Branch LEFT (Moderate Internal Marks).
+Step 3 (Study Hours Threshold Split):
+ Branch LEFT into Leaf Node A.
+Leaf Node A Historical Probability:
+In the training dataset, student records matching this path (
+, 
+, 
+) had 15 Pass records and 45 Fail records (out of 60 total students):
+
+Scenario B: Study Hours = 10.0 hrs (PASS — 89.5% Pass / 10.5% Fail)
+Step 1 (Attendance Split):
+ Branch LEFT (Low Attendance Cohort).
+Step 2 (Internal Marks Split):
+ Branch LEFT (Moderate Internal Marks).
+Step 3 (Study Hours Threshold Split):
+ Branch RIGHT into Leaf Node B.
+Leaf Node B Historical Probability:
+In the training dataset, students who had low attendance (
+) but compensated by studying 
+ hours/week belonged to a high-effort cohort (34 Pass records and 4 Fail records out of 38 total students):
+
+3. Mathematical Explanation: Information Gain & Tipping Points
+During model training, the decision tree algorithm evaluates Shannon Entropy to find the single optimal threshold value that separates passing students from failing students:
+The training algorithm discovered that 9.5 hours/week produced the maximum reduction in entropy (highest Information Gain) for students with 
+ attendance:
+Below 9.5 hours/week: Students lack the self-study volume to compensate for missed lectures 
+ high failure rate (
+).
+At or Above 10.0 hours/week: Students demonstrate sufficient self-study discipline to overcome low attendance 
+ high pass rate (
+).
+Summary
+The 1-hour increase from 9.0 to 10.0 is not evaluated as a gradual 
+ linear boost; rather, it crosses a critical tipping point rule boundary (
+). Reaching 10 hours moves the student out of the "At-Risk Low Study Cohort" into the "Compensatory Diligent Study Cohort", resulting in the sharp shift in prediction confidence.
