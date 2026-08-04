@@ -1,0 +1,104 @@
+{% extends "base.html" %}
+
+{% block title %}Cluster Analysis — K-Means Segmentation{% endblock %}
+
+{% block content %}
+<div class="page-header" style="display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 1rem;">
+  <div>
+    <h1>Cluster Analysis (K-Means Clustering)</h1>
+    <p>Segment student profiles into distinct behavioral clusters based on attendance, study effort, internal assessment performance, and absence records.</p>
+  </div>
+</div>
+
+<!-- Clustering Controls -->
+<div class="card" style="margin-bottom: 1.5rem;">
+  <h2 style="font-size: 1.1rem; margin-top: 0; margin-bottom: 1rem; font-weight: 700; color: var(--text-primary);">
+    <i class="fa-solid fa-sliders" style="color: var(--primary);"></i> Cluster Configuration
+  </h2>
+
+  <form method="GET" action="{{ url_for('clustering') }}" style="display: flex; gap: 1rem; align-items: flex-end; flex-wrap: wrap;">
+    <div style="flex: 1; min-width: 200px;">
+      <label style="font-size: 0.82rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; display: block; margin-bottom: 0.4rem;">
+        Number of Clusters (K = {{ k }})
+      </label>
+      <select name="k" class="form-control">
+        {% for val in [2, 3, 4, 5, 6] %}
+          <option value="{{ val }}" {% if k == val %}selected{% endif %}>K = {{ val }} Behavioral Clusters</option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <div>
+      <button type="submit" class="btn" style="height: 42px;">
+        <i class="fa-solid fa-play"></i> Re-Cluster Student Profiles
+      </button>
+    </div>
+  </form>
+</div>
+
+<!-- Cluster Profiles Cards -->
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem; margin-bottom: 1.5rem;">
+  {% for profile in clustering.cluster_profiles %}
+  <div class="card" style="border-top: 4px solid var(--primary);">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
+      <h3 style="font-size: 1rem; margin: 0; font-weight: 800; color: var(--text-primary);">
+        {{ profile.cluster_name }}
+      </h3>
+      <span class="badge {{ profile.tag_class }}">{{ profile.count }} Students ({{ profile.pct_of_total }}%)</span>
+    </div>
+
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; background: #f9fafb; padding: 0.75rem; border-radius: var(--radius-sm); border: 1px solid var(--border-color); font-size: 0.85rem;">
+      <div>
+        <small style="color: var(--text-muted); font-size: 0.72rem; text-transform: uppercase; font-weight: 700;">Avg Attendance</small>
+        <div style="font-weight: 800; color: var(--primary);">{{ profile.avg_attendance }}%</div>
+      </div>
+      <div>
+        <small style="color: var(--text-muted); font-size: 0.72rem; text-transform: uppercase; font-weight: 700;">Avg Study Hrs</small>
+        <div style="font-weight: 800; color: var(--primary);">{{ profile.avg_study_hours }} hrs</div>
+      </div>
+      <div>
+        <small style="color: var(--text-muted); font-size: 0.72rem; text-transform: uppercase; font-weight: 700;">Avg Internals</small>
+        <div style="font-weight: 800; color: var(--primary);">{{ profile.avg_internal_marks }}/50</div>
+      </div>
+      <div>
+        <small style="color: var(--text-muted); font-size: 0.72rem; text-transform: uppercase; font-weight: 700;">Avg Absences</small>
+        <div style="font-weight: 800; color: var(--danger);">{{ profile.avg_absences }} days</div>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+
+<!-- Scatter Plot Visualization Canvas -->
+<div class="card">
+  <h2 style="font-size: 1.15rem; margin-top: 0; margin-bottom: 0.5rem; font-weight: 700; color: var(--text-primary);">
+    <i class="fa-solid fa-chart-dot" style="color: var(--primary);"></i> Cluster Distribution Map (Attendance vs. Internal Marks)
+  </h2>
+  <p style="font-size: 0.82rem; color: var(--text-secondary); margin-top: 0; margin-bottom: 1.25rem;">
+    Visualizing student cluster assignments across Attendance Rate (%) and Internal Assessment Marks (0-50).
+  </p>
+
+  <div style="position: relative; width: 100%; height: 380px; background: #f8fafc; border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: 1rem; overflow: hidden;">
+    <svg id="cluster-svg" width="100%" height="100%" viewBox="0 0 700 340" preserveAspectRatio="none">
+      <!-- Grid lines -->
+      <line x1="50" y1="20" x2="50" y2="290" stroke="#e2e8f0" stroke-width="1.5"/>
+      <line x1="50" y1="290" x2="670" y2="290" stroke="#e2e8f0" stroke-width="1.5"/>
+
+      <!-- Axis Labels -->
+      <text x="360" y="325" text-anchor="middle" font-size="12" fill="#64748b" font-weight="600">Attendance Rate (%) ➔</text>
+      <text x="18" y="160" text-anchor="middle" font-size="12" fill="#64748b" font-weight="600" transform="rotate(-90 18 160)">Internal Marks ➔</text>
+
+      <!-- Data Points -->
+      {% set colors = ['#2563eb', '#16a34a', '#dc2626', '#9333ea', '#ea580c', '#0891b2'] %}
+      {% for pt in clustering.points %}
+        {% set cx = 50 + (pt.x / 100.0) * 620 %}
+        {% set cy = 290 - (pt.y / 50.0) * 270 %}
+        {% set color = colors[pt.cluster % colors|length] %}
+        <circle cx="{{ cx }}" cy="{{ cy }}" r="5" fill="{{ color }}" opacity="0.75" stroke="#ffffff" stroke-width="1">
+          <title>Attendance: {{ pt.x }}%, Internal Marks: {{ pt.y }}/50, Cluster {{ pt.cluster + 1 }}</title>
+        </circle>
+      {% endfor %}
+    </svg>
+  </div>
+</div>
+{% endblock %}

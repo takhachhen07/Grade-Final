@@ -1,116 +1,148 @@
 {% extends "base.html" %}
 
-{% block title %}Overview — Student Performance Analytics{% endblock %}
+{% block title %}Overview — Data Warehousing & Data Mining Suite{% endblock %}
 
 {% block content %}
 <div class="page-header" style="display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 1rem;">
   <div>
-    <h1>Dashboard</h1>
-    <p>Predict, analyze, and optimize student academic performance with ease.</p>
+    <h1>Data Warehousing & Data Mining Suite</h1>
+    <p>Perform ETL processing, multidimensional OLAP slicing, association rule mining, and K-Means student clustering.</p>
   </div>
   <div style="display: flex; gap: 0.75rem;">
-    <a href="{{ url_for('predict') }}" class="btn"><i class="fa-solid fa-plus"></i> New Prediction</a>
-    <a href="{{ url_for('tree') }}" class="btn btn-secondary"><i class="fa-solid fa-sitemap"></i> Decision Tree</a>
-    <a href="{{ url_for('dataset') }}" class="btn btn-secondary"><i class="fa-solid fa-arrow-down-to-bracket"></i> Student Dataset</a>
+    <a href="{{ url_for('dataset') }}" class="btn"><i class="fa-solid fa-database"></i> Explore ETL Dataset</a>
+    <a href="{{ url_for('olap') }}" class="btn btn-secondary"><i class="fa-solid fa-cubes"></i> OLAP Cube</a>
   </div>
 </div>
 
-<!-- Key Metric Cards in Donezo style -->
-<div class="grid-4">
-  <!-- Primary Card with Emerald Gradient -->
+<!-- Key Stat Cards -->
+<div class="grid-4" style="margin-bottom: 1.5rem;">
   <div class="metric-card metric-card-primary">
     <div class="metric-card-header">
-      <h3>Total Records</h3>
+      <h3>Warehouse Records</h3>
       <div class="metric-arrow-btn"><i class="fa-solid fa-arrow-up-right"></i></div>
     </div>
     <div class="metric-body">
       <div class="value">{{ stats.total_records }}</div>
       <div class="metric-footer-badge">
-        <i class="fa-solid fa-arrow-trend-up"></i> Staged in Database
+        <i class="fa-solid fa-database"></i> Operational Data Store
       </div>
     </div>
   </div>
 
   <div class="metric-card">
     <div class="metric-card-header">
-      <h3>Pass Rate</h3>
+      <h3>Pass Outcome</h3>
       <div class="metric-arrow-btn"><i class="fa-solid fa-arrow-up-right"></i></div>
     </div>
     <div class="metric-body">
       <div class="value">{{ stats.pass_rate }}%</div>
       <div class="metric-footer-badge" style="color: var(--secondary);">
-        <i class="fa-solid fa-circle-check"></i> Overall Success Rate
+        <i class="fa-solid fa-circle-check"></i> Overall Pass Rate
       </div>
     </div>
   </div>
 
   <div class="metric-card">
     <div class="metric-card-header">
-      <h3>Model Accuracy</h3>
+      <h3>Average Attendance</h3>
       <div class="metric-arrow-btn"><i class="fa-solid fa-arrow-up-right"></i></div>
     </div>
     <div class="metric-body">
-      <div class="value">{{ metrics.accuracy | default(92.3) }}%</div>
-      <div class="metric-footer-badge" style="color: var(--info);">
-        <i class="fa-solid fa-bullseye"></i> Calibrated Decision Tree
+      <div class="value">{{ stats.avg_attendance }}%</div>
+      <div class="metric-footer-badge" style="color: #0284c7;">
+        <i class="fa-solid fa-chart-line"></i> Mean Class Presence
       </div>
     </div>
   </div>
 
   <div class="metric-card">
     <div class="metric-card-header">
-      <h3>Model F1-Score</h3>
+      <h3>Average Study Hours</h3>
       <div class="metric-arrow-btn"><i class="fa-solid fa-arrow-up-right"></i></div>
     </div>
     <div class="metric-body">
-      <div class="value">{{ metrics.f1_score | default(91.8) }}%</div>
+      <div class="value">{{ stats.avg_study_hours }} <span style="font-size: 1rem;">hrs/wk</span></div>
       <div class="metric-footer-badge" style="color: #9333ea;">
-        <i class="fa-solid fa-star"></i> High Precision Model
+        <i class="fa-solid fa-book-open"></i> Weekly Study Effort
       </div>
     </div>
   </div>
 </div>
 
-<!-- How It Works Section -->
-<div class="card" style="margin-top: 1rem;">
-  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
-    <h2 style="font-size: 1.2rem; margin: 0; color: var(--text-primary); font-weight: 700;"><i class="fa-solid fa-diagram-project" style="color: var(--primary);"></i> How It Works</h2>
-    <span class="badge badge-pass"><i class="fa-solid fa-bolt"></i> Real-time AI Engine</span>
+<!-- Core Architectural Modules Section -->
+<div class="card">
+  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem; flex-wrap: wrap; gap: 0.5rem;">
+    <h2 style="font-size: 1.2rem; margin: 0; color: var(--text-primary); font-weight: 700;">
+      <i class="fa-solid fa-layer-group" style="color: var(--primary);"></i> Core Modules
+    </h2>
+    <span class="badge badge-pass"><i class="fa-solid fa-bolt"></i> Interactive Data Platform</span>
   </div>
   <p style="color: var(--text-secondary); font-size: 0.9rem; margin-top: 0;">
-    Our system processes student academic data through a 4-step pipeline to provide accurate outcome predictions and actionable study guidance.
+    Select any module below to perform data warehousing queries, multidimensional analysis, association rule mining, or clustering.
   </p>
 
-  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.25rem; margin-top: 1.25rem;">
-    <div style="background: #f9fafb; border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: 1.25rem;">
-      <div style="background: var(--primary-light); color: var(--primary); width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; border-radius: 50%; font-weight: 800; margin-bottom: 0.75rem;">1</div>
-      <strong style="display: block; color: var(--text-primary); margin-bottom: 0.25rem; font-size: 0.95rem;">Student Data Collection</strong>
-      <span style="font-size: 0.82rem; color: var(--text-secondary);">Stores student records including attendance %, weekly study hours, internal test marks, and absences.</span>
-    </div>
+  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1.25rem; margin-top: 1.25rem;">
+    
+    <!-- Module 1: ETL & ODS -->
+    <a href="{{ url_for('dataset') }}" style="text-decoration: none; color: inherit;">
+      <div class="card" style="margin: 0; height: 100%; transition: transform 0.2s, box-shadow 0.2s; cursor: pointer; border-top: 4px solid var(--primary);" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
+        <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.75rem;">
+          <div style="background: var(--primary-light); color: var(--primary); width: 38px; height: 38px; border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: center; font-size: 1.1rem;">
+            <i class="fa-solid fa-database"></i>
+          </div>
+          <h3 style="margin: 0; font-size: 1.05rem; font-weight: 800; color: var(--text-primary);">1. ETL & ODS Store</h3>
+        </div>
+        <p style="font-size: 0.85rem; color: var(--text-secondary); margin: 0; line-height: 1.5;">
+          Extract, transform, and load raw student records. Clean missing data using statistical mean imputation and stage data in the Operational Data Store.
+        </p>
+      </div>
+    </a>
 
-    <div style="background: #f9fafb; border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: 1.25rem;">
-      <div style="background: #ecfdf5; color: var(--secondary); width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; border-radius: 50%; font-weight: 800; margin-bottom: 0.75rem;">2</div>
-      <strong style="display: block; color: var(--text-primary); margin-bottom: 0.25rem; font-size: 0.95rem;">Data Cleaning & Validation</strong>
-      <span style="font-size: 0.82rem; color: var(--text-secondary);">Automatically handles missing values using dataset averages and ensures data consistency.</span>
-    </div>
+    <!-- Module 2: OLAP Cube -->
+    <a href="{{ url_for('olap') }}" style="text-decoration: none; color: inherit;">
+      <div class="card" style="margin: 0; height: 100%; transition: transform 0.2s, box-shadow 0.2s; cursor: pointer; border-top: 4px solid #0284c7;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
+        <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.75rem;">
+          <div style="background: #e0f2fe; color: #0284c7; width: 38px; height: 38px; border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: center; font-size: 1.1rem;">
+            <i class="fa-solid fa-cubes"></i>
+          </div>
+          <h3 style="margin: 0; font-size: 1.05rem; font-weight: 800; color: var(--text-primary);">2. OLAP Data Cube</h3>
+        </div>
+        <p style="font-size: 0.85rem; color: var(--text-secondary); margin: 0; line-height: 1.5;">
+          Perform multidimensional queries including Slice, Dice, Roll-Up, and Drill-Down operations across attendance, study hours, and performance tiers.
+        </p>
+      </div>
+    </a>
 
-    <div style="background: #f9fafb; border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: 1.25rem;">
-      <div style="background: #fef3c7; color: var(--warning); width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; border-radius: 50%; font-weight: 800; margin-bottom: 0.75rem;">3</div>
-      <strong style="display: block; color: var(--text-primary); margin-bottom: 0.25rem; font-size: 0.95rem;">AI Outcome Prediction</strong>
-      <span style="font-size: 0.82rem; color: var(--text-secondary);">Predicts student Pass/Fail probability using trained pattern recognition algorithms.</span>
-    </div>
+    <!-- Module 3: Association Rules -->
+    <a href="{{ url_for('association_rules') }}" style="text-decoration: none; color: inherit;">
+      <div class="card" style="margin: 0; height: 100%; transition: transform 0.2s, box-shadow 0.2s; cursor: pointer; border-top: 4px solid var(--secondary);" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
+        <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.75rem;">
+          <div style="background: #ecfdf5; color: var(--secondary); width: 38px; height: 38px; border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: center; font-size: 1.1rem;">
+            <i class="fa-solid fa-link"></i>
+          </div>
+          <h3 style="margin: 0; font-size: 1.05rem; font-weight: 800; color: var(--text-primary);">3. Association Rules</h3>
+        </div>
+        <p style="font-size: 0.85rem; color: var(--text-secondary); margin: 0; line-height: 1.5;">
+          Mine frequent itemsets using the Apriori algorithm. Uncover actionable association rules connecting student habits with academic outcomes.
+        </p>
+      </div>
+    </a>
 
-    <div style="background: #f9fafb; border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: 1.25rem;">
-      <div style="background: #f3e8ff; color: #9333ea; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; border-radius: 50%; font-weight: 800; margin-bottom: 0.75rem;">4</div>
-      <strong style="display: block; color: var(--text-primary); margin-bottom: 0.25rem; font-size: 0.95rem;">Tailored Study Advice</strong>
-      <span style="font-size: 0.82rem; color: var(--text-secondary);">Generates personalized recommendations based on specific academic risk factors.</span>
-    </div>
-  </div>
+    <!-- Module 4: Cluster Analysis -->
+    <a href="{{ url_for('clustering') }}" style="text-decoration: none; color: inherit;">
+      <div class="card" style="margin: 0; height: 100%; transition: transform 0.2s, box-shadow 0.2s; cursor: pointer; border-top: 4px solid #9333ea;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
+        <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.75rem;">
+          <div style="background: #f3e8ff; color: #9333ea; width: 38px; height: 38px; border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: center; font-size: 1.1rem;">
+            <i class="fa-solid fa-diagram-project"></i>
+          </div>
+          <h3 style="margin: 0; font-size: 1.05rem; font-weight: 800; color: var(--text-primary);">4. Cluster Analysis</h3>
+        </div>
+        <p style="font-size: 0.85rem; color: var(--text-secondary); margin: 0; line-height: 1.5;">
+          Segment student populations using K-Means clustering. Profile high performers, dedicated study effort groups, and at-risk academic warning clusters.
+        </p>
+      </div>
+    </a>
 
-  <div style="margin-top: 1.5rem; display: flex; gap: 1rem;">
-    <a href="{{ url_for('predict') }}" class="btn"><i class="fa-solid fa-wand-magic-sparkles"></i> Try Live Predictor</a>
-    <a href="{{ url_for('dataset') }}" class="btn btn-secondary"><i class="fa-solid fa-database"></i> View Dataset</a>
   </div>
 </div>
 {% endblock %}
-

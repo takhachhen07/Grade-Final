@@ -1,0 +1,149 @@
+{% extends "base.html" %}
+
+{% block title %}Association Rule Mining — Apriori Algorithm{% endblock %}
+
+{% block content %}
+<div class="page-header" style="display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 1rem;">
+  <div>
+    <h1>Association Rule Mining (Apriori Algorithm)</h1>
+    <p>Discover frequent itemsets and high-confidence association rules connecting student academic behaviors with performance outcomes.</p>
+  </div>
+</div>
+
+<!-- Mining Controls -->
+<div class="card" style="margin-bottom: 1.5rem;">
+  <h2 style="font-size: 1.1rem; margin-top: 0; margin-bottom: 1rem; font-weight: 700; color: var(--text-primary);">
+    <i class="fa-solid fa-sliders" style="color: var(--primary);"></i> Apriori Threshold Hyperparameters
+  </h2>
+
+  <form method="GET" action="{{ url_for('association_rules') }}" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem; align-items: flex-end;">
+    <div>
+      <label style="font-size: 0.82rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; display: block; margin-bottom: 0.4rem;">
+        Minimum Support ({{ (min_support * 100) | round(1) }}%)
+      </label>
+      <input type="range" name="min_support" min="0.05" max="0.50" step="0.05" value="{{ min_support }}" class="form-control" oninput="this.nextElementSibling.value = (this.value * 100).toFixed(0) + '%'">
+      <output style="font-size: 0.8rem; font-weight: 700; color: var(--primary); display: block; margin-top: 0.2rem;">{{ (min_support * 100) | round(1) }}%</output>
+    </div>
+
+    <div>
+      <label style="font-size: 0.82rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; display: block; margin-bottom: 0.4rem;">
+        Minimum Confidence ({{ (min_confidence * 100) | round(1) }}%)
+      </label>
+      <input type="range" name="min_confidence" min="0.20" max="0.95" step="0.05" value="{{ min_confidence }}" class="form-control" oninput="this.nextElementSibling.value = (this.value * 100).toFixed(0) + '%'">
+      <output style="font-size: 0.8rem; font-weight: 700; color: var(--primary); display: block; margin-top: 0.2rem;">{{ (min_confidence * 100) | round(1) }}%</output>
+    </div>
+
+    <div>
+      <button type="submit" class="btn" style="width: 100%; justify-content: center; height: 42px;">
+        <i class="fa-solid fa-play"></i> Mine Frequent Rules
+      </button>
+    </div>
+  </form>
+</div>
+
+<!-- Mining Summary Stats -->
+<div class="stats-grid" style="margin-bottom: 1.5rem;">
+  <div class="stat-card">
+    <div class="stat-label">Total Transactions</div>
+    <div class="stat-value" style="color: var(--primary);">{{ mining.stats.total_transactions }}</div>
+    <div style="font-size: 0.78rem; color: var(--text-secondary); margin-top: 0.25rem;">Student Profiles Analyzed</div>
+  </div>
+
+  <div class="stat-card">
+    <div class="stat-label">Frequent Itemsets</div>
+    <div class="stat-value" style="color: #0284c7;">{{ mining.stats.frequent_itemsets_count }}</div>
+    <div style="font-size: 0.78rem; color: var(--text-secondary); margin-top: 0.25rem;">Patterns Above Support Threshold</div>
+  </div>
+
+  <div class="stat-card">
+    <div class="stat-label">Generated Rules</div>
+    <div class="stat-value" style="color: var(--secondary);">{{ mining.stats.rules_found }}</div>
+    <div style="font-size: 0.78rem; color: var(--text-secondary); margin-top: 0.25rem;">High Confidence Association Rules</div>
+  </div>
+</div>
+
+<!-- Association Rules Table -->
+<div class="card" style="margin-bottom: 1.5rem;">
+  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; flex-wrap: wrap; gap: 0.75rem;">
+    <h2 style="font-size: 1.15rem; margin: 0; color: var(--text-primary); font-weight: 700;">
+      <i class="fa-solid fa-link" style="color: var(--primary);"></i> Mined Association Rules (Antecedent ➔ Consequent)
+    </h2>
+    <span class="badge badge-info">{{ mining.rules | length }} Mined Rules</span>
+  </div>
+
+  <div class="table-responsive" style="max-height: 500px; overflow-y: auto;">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Antecedent (IF)</th>
+          <th></th>
+          <th>Consequent (THEN)</th>
+          <th>Support (%)</th>
+          <th>Confidence (%)</th>
+          <th>Lift Score</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% if mining.rules %}
+          {% for rule in mining.rules %}
+          <tr>
+            <td>
+              <span class="badge badge-info" style="font-size: 0.8rem; font-weight: 600;">
+                {{ rule.antecedent_str }}
+              </span>
+            </td>
+            <td style="text-align: center; color: var(--text-muted);"><i class="fa-solid fa-right-long"></i></td>
+            <td>
+              <span class="badge {% if 'Outcome Pass' in rule.consequent_str %}badge-pass{% else %}badge-fail{% endif %}" style="font-size: 0.8rem;">
+                {{ rule.consequent_str }}
+              </span>
+            </td>
+            <td style="font-family: monospace; font-weight: 700;">{{ rule.support }}%</td>
+            <td style="font-family: monospace; font-weight: 700; color: var(--primary);">{{ rule.confidence }}%</td>
+            <td>
+              <strong style="font-family: monospace; {% if rule.lift > 1.2 %}color: var(--secondary);{% else %}color: var(--text-primary);{% endif %}">
+                {{ rule.lift }}
+              </strong>
+            </td>
+          </tr>
+          {% endfor %}
+        {% else %}
+          <tr>
+            <td colspan="6" style="text-align: center; color: var(--text-secondary); padding: 3rem;">
+              No rules satisfy the current threshold settings. Try lowering Minimum Support or Minimum Confidence.
+            </td>
+          </tr>
+        {% endif %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- Frequent Itemsets -->
+<div class="card">
+  <h2 style="font-size: 1.15rem; margin-top: 0; margin-bottom: 1rem; font-weight: 700; color: var(--text-primary);">
+    <i class="fa-solid fa-boxes-stacked" style="color: var(--primary);"></i> Top Frequent Itemsets
+  </h2>
+
+  <div class="table-responsive">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Itemset Combination</th>
+          <th>Size (k)</th>
+          <th>Support Rate (%)</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for item in mining.frequent_itemsets %}
+        <tr>
+          <td><strong style="color: var(--text-primary);">{{ item.itemset }}</strong></td>
+          <td><span class="badge badge-info">{{ item.size }}-itemset</span></td>
+          <td><strong style="color: var(--primary); font-family: monospace;">{{ item.support }}%</strong></td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

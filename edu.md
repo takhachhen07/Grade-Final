@@ -1,62 +1,37 @@
-# GradePric — Student Performance Analytics System
-> **Data Warehouse & Data Mining Project**  
+# Data Warehousing & Data Mining Suite
+> **Course:** Data Warehouse & Data Mining  
 > **Team Members:** Rahul, Neeti & Sathin — **022 Batch**
 
 ---
 
-## 📌 1. Overview
+## 📌 1. Suite Overview
 
-**GradePric** is an academic analytics web platform built using **Python Flask**, **Pandas**, and **Scikit-Learn**. It applies Data Warehousing and Data Mining techniques to predict student performance (Pass/Fail), clean messy academic data, and provide personalized study recommendations.
+An end-to-end Data Warehousing and Data Mining platform built using **Python Flask**, **Pandas**, and **NumPy**. It implements ETL data preprocessing, OLAP multidimensional data cubes, Apriori association rule mining, and K-Means cluster analysis.
 
 ---
 
-## 🏬 2. Data Warehouse (DW) Concepts
+## 🏬 2. Data Warehouse (DW) Modules
 
 ### A. Operational Data Store (ODS)
-- `uploaded_dataset.csv` acts as a staging database storing operational student records (Attendance, Study Hours, Internal Marks, Grades, Absences, Result) uploaded by users.
+- `uploaded_dataset.csv` acts as the central staging database holding student academic metrics.
 
 ### B. ETL (Extract, Transform, Load) Pipeline
-1. **Extract**: Ingests raw data from CSV uploads or manual web form submissions.
-2. **Transform**:
-   - **Imputation**: Missing numerical values are filled with the **Mean**; categorical values with the **Mode**.
-   - **Range Enforcement**: Clips numerical values to valid boundaries (e.g., Attendance 0–100%, Internal Marks 0–50).
-   - **Encoding**: Converts letter grades and pass/fail labels into numeric formats for model training.
-3. **Load**: Saves cleaned datasets to the ODS and feeds them into the machine learning pipeline.
+1. **Extract**: Ingests raw data from CSV uploads or forms.
+2. **Transform**: Missing numerical values are filled with the **Mean**; categorical values with the **Mode**. Range clipping bounds values to valid limits.
+3. **Load**: Saves cleaned data to the ODS for analytics modules.
 
-### C. Analytical Aggregations
-- Computes key summary stats across the dataset, such as average attendance rate, average study hours, and overall pass/fail percentage.
+### C. OLAP Data Cube Engine
+- Supports **Slice**, **Dice**, **Roll-Up**, and **Drill-Down** multidimensional analytical operations across Attendance Tiers, Study Hours Tiers, Grades, and Gender.
 
 ---
 
-## ⛏️ 3. Data Mining (DM) Concepts
+## ⛏️ 3. Data Mining (DM) Modules
 
-### A. Decision Tree Classification
-- Uses a **Decision Tree Classifier** (C4.5 / Entropy) to segment student data into decision rules predicting whether a student will Pass or Fail.
+### A. Association Rule Mining (Apriori)
+- Discretizes attributes into transaction itemsets and discovers high-confidence association rules ($IF \rightarrow THEN$) with customizable Minimum Support and Minimum Confidence controls.
 
-### B. Probability Calibration
-- Applies probability calibration (Platt Scaling) to convert raw tree splits into smooth, realistic Pass/Fail probability scores ($0–100\%$).
-
-### C. Feature Importance Analysis
-- Measures how much each attribute contributes to the prediction in percentage (%):
-  1. **Internal Assessment Marks:** **40.0%**
-  2. **Weekly Study Hours:** **30.0%**
-  3. **Attendance Rate (%):** **20.0%**
-  4. **Previous Letter Grade:** **5.0%**
-  5. **Unexcused Absences:** **5.0%**
-
-### D. Rule-Based Academic Interventions
-- Uses heuristic rules to generate tailored advice based on risk factors:
-  - **Attendance < 75%**: Mandatory academic counseling.
-  - **Internal Marks < 20/50**: Remedial tutoring recommended.
-  - **Study Hours < 10 hrs/wk**: Study schedule adjustment needed.
-  - **Absences > 7 days**: Excessive absenteeism warning.
+### B. Cluster Analysis (K-Means)
+- Groups student profiles into $K$ behavioral clusters (e.g., High-Performing Achievers, At-Risk Academic Warnings, Dedicated High-Effort) with interactive scatter plot maps.
 
 ---
-
-## 💡 4. Key Application Features
-
-1. **Overview Dashboard**: Displays high-level stats (Total Records, Dataset Pass Rate, Model Accuracy, F1-Score).
-2. **Student Dataset & ETL Cleaning**: Displays dataset records, flags missing data, enables single-click cleaning, and supports custom CSV uploads.
-3. **Outcome Predictor**: Accepts individual student details to compute calibrated Pass/Fail predictions and customized study advice.
-4. **Prediction History Log**: Maintains an audit log (`prediction_history.json`) of past predictions.
-
+*Presented by Rahul, Neeti & Sathin — 022 Batch*

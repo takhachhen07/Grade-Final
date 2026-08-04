@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>{% block title %}GradePric — Student Performance Analytics{% endblock %}</title>
+  <title>{% block title %}Data Warehousing & Data Mining Suite{% endblock %}</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
@@ -15,38 +15,44 @@
       <div>
         <a href="{{ url_for('index') }}" class="sidebar-brand">
           <div class="brand-icon">
-            <i class="fa-solid fa-graduation-cap"></i>
+            <i class="fa-solid fa-layer-group"></i>
           </div>
-          <span>GradePric</span>
+          <span>Data Warehouse</span>
         </a>
 
         <div class="sidebar-nav">
           <div>
-            <div class="sidebar-section-label">NAVIGATION</div>
+            <div class="sidebar-section-label">DATA WAREHOUSE & ODS</div>
             <ul class="sidebar-menu">
               <li>
                 <a href="{{ url_for('index') }}" class="{% if request.path == '/' %}active{% endif %}">
-                  <i class="fa-solid fa-chart-line"></i> Overview
+                  <i class="fa-solid fa-chart-line"></i> Overview Dashboard
                 </a>
               </li>
               <li>
                 <a href="{{ url_for('dataset') }}" class="{% if request.path == '/dataset' %}active{% endif %}">
-                  <i class="fa-solid fa-database"></i> Student Dataset
+                  <i class="fa-solid fa-database"></i> Dataset & ODS (ETL)
                 </a>
               </li>
               <li>
-                <a href="{{ url_for('predict') }}" class="{% if request.path == '/predict' %}active{% endif %}">
-                  <i class="fa-solid fa-wand-magic-sparkles"></i> Predict Result
+                <a href="{{ url_for('olap') }}" class="{% if request.path == '/olap' %}active{% endif %}">
+                  <i class="fa-solid fa-cubes"></i> OLAP Data Cube
+                </a>
+              </li>
+            </ul>
+          </div>
+
+          <div style="margin-top: 1.25rem;">
+            <div class="sidebar-section-label">DATA MINING MODULES</div>
+            <ul class="sidebar-menu">
+              <li>
+                <a href="{{ url_for('association_rules') }}" class="{% if request.path == '/association-rules' %}active{% endif %}">
+                  <i class="fa-solid fa-link"></i> Association Rules (Apriori)
                 </a>
               </li>
               <li>
-                <a href="{{ url_for('tree') }}" class="{% if request.path == '/tree' %}active{% endif %}">
-                  <i class="fa-solid fa-sitemap"></i> Decision Tree
-                </a>
-              </li>
-              <li>
-                <a href="{{ url_for('results') }}" class="{% if request.path == '/results' %}active{% endif %}">
-                  <i class="fa-solid fa-clock-rotate-left"></i> Prediction History
+                <a href="{{ url_for('clustering') }}" class="{% if request.path == '/clustering' %}active{% endif %}">
+                  <i class="fa-solid fa-diagram-project"></i> Cluster Analysis (K-Means)
                 </a>
               </li>
             </ul>

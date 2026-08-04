@@ -47,7 +47,7 @@ def train_decision_tree(df, criterion='entropy', max_depth=5, test_size=0.2, aut
     best_score = -1.0
 
     if auto_tune and len(X_train) >= 10:
-        criteria_options = ['entropy']
+        criteria_options = ['entropy', 'gini']
         depth_options = [3, 4, 5, 6, 7, 8, None]
         split_options = [2, 5, 10]
 
@@ -598,13 +598,31 @@ def save_prediction_history(entry, history_path='prediction_history.json'):
         print(f"Error writing prediction history: {e}")
 
 def get_prediction_history(history_path='prediction_history.json'):
-    """Reads transaction log from disk."""
+    """Reads transaction log from disk and normalizes entry structures."""
     if not os.path.exists(history_path):
         return []
     try:
         with open(history_path, 'r') as f:
-            return json.load(f)
-    except Exception:
+            history = json.load(f)
+            if not isinstance(history, list):
+                return []
+            
+            for item in history:
+                if isinstance(item, dict):
+                    if 'inputs' not in item or not isinstance(item['inputs'], dict):
+                        item['inputs'] = {
+                            'student_id': item.get('student_id', 'STU-1001'),
+                            'gender': item.get('gender', 'Male'),
+                            'age': item.get('age', 20),
+                            'attendance': item.get('attendance', 80.0),
+                            'study_hours': item.get('study_hours', 10.0),
+                            'internal_marks': item.get('internal_marks', 30.0),
+                            'previous_grade': item.get('previous_grade', 'B'),
+                            'absences': item.get('absences', 3)
+                        }
+            return history
+    except Exception as e:
+        print(f"Error reading prediction history: {e}")
         return []
 
 def clear_prediction_history(history_path='prediction_history.json'):

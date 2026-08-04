@@ -1,156 +1,90 @@
-# Student Performance Prediction Using Decision Tree 🎓
+# Data Warehousing & Data Mining Suite 🎓
 
-A comprehensive Data Mining project predicting whether a student will **Pass** or **Fail** based on academic parameters using a **Decision Tree Classifier** and a **Flask / Node.js** web application.
+An interactive Data Warehousing and Data Mining platform supporting ETL data processing, Operational Data Store staging, OLAP Data Cubes (Slice, Dice, Roll-Up, Drill-Down), Association Rule Mining (Apriori Algorithm), and K-Means Cluster Analysis.
 
-> 📖 **Detailed Documentation:** For a complete breakdown of all Data Mining concepts, Data Structures, Machine Learning algorithms, and mathematical formulas, please see [PROJECT_DOCUMENTATION.md](PROJECT_DOCUMENTATION.md).
+> 📖 **Detailed Presentation Outline:** For a slide-by-slide presentation breakdown, see [presentation.md](presentation.md).  
+> 📖 **Detailed Technical Documentation:** For comprehensive architectural details, formulas, and algorithms, see [PROJECT_DOCUMENTATION.md](PROJECT_DOCUMENTATION.md).
 
 ---
 
 ## 📌 Project Overview
-Predicting student academic performance enables early identification of at-risk students, allowing educators and institutions to provide timely interventions. This project implements an end-to-end Machine Learning pipeline utilizing Data Mining concepts, from raw CSV data ingestion to preprocessing, supervised model training, dynamic metric evaluation, and an interactive web interface.
 
----
+This project provides an intuitive web platform for educational analytics and data mining. It transforms raw student engagement metrics into actionable insights through 4 core modules:
 
-## 🎯 Objectives
-* **Data Ingestion & Cleaning:** Load dataset and handle missing values automatically using mean/median/mode imputation.
-* **Categorical Encoding:** Encode categorical student attributes (`Gender`, `Previous_Grade`, `Result`) into numerical vectors.
-* **Supervised Learning:** Train a **Decision Tree Classifier** to classify students into Pass or Fail classes.
-* **Performance Evaluation:** Dynamically compute Model Accuracy, Confusion Matrix, Precision, Recall, and F1-Score.
-* **Visual Analytics:** Generate visual plots for feature distribution, feature importance, and confusion matrix heatmaps.
-* **Interactive Prediction Form:** Provide a simple, web-based form for predicting individual student outcomes instantly with personalized academic feedback.
+1. **ETL & Operational Data Store (ODS):** Ingest raw dataset records, execute automated mean/mode imputation for missing values, and stage records in the ODS (`uploaded_dataset.csv`).
+2. **OLAP Data Cube Engine:** Multidimensional query matrix supporting Slice, Dice, Roll-Up, and Drill-Down operations across Attendance, Study Hours, Grades, and Gender.
+3. **Association Rule Mining (Apriori Algorithm):** Discretizes attributes into transaction itemsets and mines frequent itemsets and high-confidence association rules ($IF \rightarrow THEN$).
+4. **Cluster Analysis (K-Means Clustering):** Unsupervised student profile segmentation into $K$ behavioral clusters (High-Performing Achievers, At-Risk Academic Warnings, Dedicated High-Effort) with interactive scatter plot maps.
 
 ---
 
 ## 🛠️ Technologies Used
-* **Programming Language:** Python 3.10+
+* **Programming Language:** Python 3.11+
 * **Backend Web Framework:** Flask 3.0+
-* **Data Mining & Analytics:** Pandas, NumPy
-* **Machine Learning:** Scikit-learn (`DecisionTreeClassifier`, `train_test_split`, `metrics`)
-* **Data Visualization:** Matplotlib, Seaborn
-* **Model Serialization:** Joblib (`model.pkl`)
-* **Frontend:** HTML5, CSS3, Vanilla JavaScript
+* **Data Analytics & Warehousing:** Pandas, NumPy
+* **Data Mining Algorithms:**
+  * Custom Apriori Itemset Mining (`utils/association_rules.py`)
+  * Custom Vectorized K-Means Clustering (`utils/clustering.py`)
+  * Multidimensional OLAP Aggregation Engine (`utils/olap_engine.py`)
+* **Frontend UI & Styling:** HTML5, Responsive CSS3, SVG Data Canvas, FontAwesome
 
 ---
 
-## 📊 Dataset Analysis (Uploaded CSV Dataset)
-The project analyzes student performance records uploaded via the web interface (`uploaded_dataset.csv`) with the following key features:
+## 📊 Operational Data Store Schema
 
 | Feature Name | Type | Description / Range |
 | :--- | :--- | :--- |
-| `Student_ID` | String | Unique Identifier (e.g., STU1001) |
+| `Student_ID` | String | Unique Student Identifier (e.g., STU-1001) |
 | `Gender` | Categorical | Male / Female |
 | `Age` | Integer | Student Age (17 to 23) |
 | `Attendance` | Float | Class Attendance Percentage (0.0% to 100.0%) |
-| `Study_Hours` | Float | Daily Study Time (1.0 to 12.0 hours) |
-| `Internal Marks(20-50)`| Integer | Mid-term/Internal assessment score (20 to 50) |
-| `Previous_Grade` | Categorical | Historical academic grade (A, B, C, D, F) |
-| `Absences` | Integer | Total days absent (0 to 20) |
+| `Study_Hours` | Float | Weekly Study Time (1.0 to 30.0 hours) |
+| `Internal_Marks`| Integer | Mid-term/Internal score (0 to 50) |
+| `Previous_Grade` | Categorical | Past Letter Grade (A, B, C, D, F) |
+| `Absences` | Integer | Total Days Absent (0 to 20) |
 | `Result` | Categorical | Target Outcome: **Pass** or **Fail** |
-
----
-
-## ⚙️ Data Preprocessing & Pipeline
-1. **Missing Value Imputation:**
-   - Numerical columns (`Attendance`, `Study_Hours`, `Internal Marks(20-50)`, `Age`, `Absences`) missing values filled with column median.
-   - Categorical columns (`Gender`, `Previous_Grade`) missing values filled with mode.
-2. **Label Encoding:**
-   - `Gender`: Male = 0, Female = 1
-   - `Previous_Grade`: A = 4, B = 3, C = 2, D = 1, F = 0
-   - `Result`: Pass = 1, Fail = 0
-3. **Train-Test Split:**
-   - 80% Training Set, 20% Testing Set with stratified sampling.
-
----
-
-## 🌳 Decision Tree Algorithm Explanation
-The **Decision Tree Classifier** is a supervised learning algorithm used for classification. It splits data recursively based on feature thresholds that maximize class purity, measured using **Shannon Entropy**:
-
-$$H(D) = -\sum_{i=1}^{k} p_i \log_2(p_i)$$
-
-Where $p_i$ is the probability of an item belonging to class $i$. The feature with the highest **Information Gain** becomes the split node.
-
-### 📈 Feature Contribution Percentage (%)
-1. **Internal Assessment Marks:** **40.0%**
-2. **Weekly Study Hours:** **30.0%**
-3. **Attendance Rate (%):** **20.0%**
-4. **Previous Letter Grade:** **5.0%**
-5. **Unexcused Absences:** **5.0%**
 
 ---
 
 ## 🚀 How to Run Locally
 
-### Prerequisites
-* Python 3.8 or higher installed on your machine.
-* `pip` package manager.
-
 ### Step-by-Step Execution Guide
 
-1. **Clone or Download the Repository:**
-   ```bash
-   git clone https://github.com/your-username/student-performance-prediction.git
-   cd student-performance-prediction
-   ```
-
-2. **Install Required Python Packages:**
+1. **Install Dependencies:**
    ```bash
    pip install -r requirements.txt
    ```
 
-3. **Generate Dataset (Optional / First Time):**
-   ```bash
-   python generate_data.py
-   ```
-
-4. **Run the Flask Web Application:**
+2. **Run the Flask Application:**
    ```bash
    python app.py
    ```
 
-5. **Access the Web Application:**
-   Open your web browser and navigate to:
-   ```
-   http://127.0.0.1:3000
-   ```
+3. **Access the Application:**
+   Open your browser at `http://localhost:3000`.
 
 ---
 
-## 📁 Project Directory Structure
+## 📁 Directory Structure
 ```
-student-performance-prediction/
-│
-├── app.py                     # Flask Web Backend & ML Pipeline
-├── requirements.txt           # Python Dependencies
-├── uploaded_dataset.csv        # Staged dataset from user CSV upload
-├── model.pkl                  # Serialized Decision Tree Model
+├── app.py                      # Flask Application Entry Point & API Routes
+├── requirements.txt            # Python Dependencies
+├── uploaded_dataset.csv         # Operational Data Store (ODS) File
 ├── templates/
-│   ├── index.html             # Home Page
-│   ├── dataset.html           # Dataset Explorer, Data Cleaning & Auto-Train CSV Upload
-│   ├── predict.html           # Student Outcome Predictor Form
-│   ├── tree.html              # Interactive Decision Tree Visualizer
-│   └── results.html           # Visual Analytics & Reports
-├── static/
-│   ├── css/
-│   │   └── style.css          # Custom Responsive Styling
-│   ├── js/
-│   │   └── main.js            # Client-side Interactions
-│   └── images/                # Matplotlib Generated Charts
-├── PROJECT_REPORT.md          # College Submission Project Report
-├── PRESENTATION.md            # 10-Slide PPT Presentation Outline
-└── README.md                  # Project Documentation
+│   ├── base.html              # Base Layout & Sidebar Navigation
+│   ├── index.html             # Overview Dashboard
+│   ├── dataset.html           # Dataset Explorer & ETL Data Cleaning
+│   ├── olap.html              # OLAP Data Cube Multidimensional Analysis
+│   ├── association_rules.html # Apriori Association Rule Mining
+│   └── clustering.html        # K-Means Cluster Analysis
+├── utils/
+│   ├── data_processor.py      # ETL Data Ingestion & Cleaning
+│   ├── olap_engine.py         # OLAP Cube Slicing/Dicing Matrix Engine
+│   ├── association_rules.py  # Apriori Itemset & Rule Generator
+│   └── clustering.py         # Vectorized K-Means Segmentation
+├── presentation.md            # Slide-by-Slide Presentation Guide
+└── PROJECT_DOCUMENTATION.md   # Comprehensive Technical Documentation
 ```
 
 ---
-
-## 🔮 Future Enhancements
-* Incorporate advanced ensemble algorithms like **Random Forest** and **XGBoost** for comparative benchmarking.
-* Integrate hyperparameter optimization using `GridSearchCV`.
-* Add student performance trend analysis over multiple semesters.
-* Implement user authentication for teachers and administrators.
-
----
-
-## 📚 References
-1. Quinlan, J. R. (1986). *Induction of decision trees*. Machine Learning, 1(1), 81-106.
-2. Han, J., Kamber, M., & Pei, J. (2011). *Data Mining: Concepts and Techniques*. Morgan Kaufmann.
-3. Pedregosa, F., et al. (2011). *Scikit-learn: Machine Learning in Python*. Journal of Machine Learning Research, 12, 2825-2830.
+*Data Warehousing & Data Mining Suite — Presented by Rahul, Neeti, Sathin (Batch 022).*

@@ -1,5 +1,973 @@
 [
   {
+    "id": "PRED-1785860539",
+    "student_id": "RN1001",
+    "timestamp": "2026-08-04 16:22:19",
+    "inputs": {
+      "student_id": "RN1001",
+      "gender": "Male",
+      "age": 20,
+      "attendance": 75.0,
+      "study_hours": 8.0,
+      "internal_marks": 28.0,
+      "previous_grade": "B",
+      "absences": 3
+    },
+    "outcome": "Fail",
+    "confidence": 75.0,
+    "pass_probability": 25.0,
+    "fail_probability": 75.0,
+    "recommendations": [
+      {
+        "type": "warning",
+        "title": "Study Hours Deficit",
+        "rule": "Study Hours < 10 hrs/wk",
+        "text": "Weekly self-study is only 8.0 hrs/wk. Increase structured study time to at least 12\u201315 hours weekly."
+      }
+    ],
+    "decision_steps": [
+      {
+        "step": 1,
+        "node_id": "node-0",
+        "node_name": "Attendance Split",
+        "type": "split",
+        "feature": "Attendance Rate (%)",
+        "decision_detail": "Attendance (75.0%) \u2264 80.0% \u2794 Branching LEFT (Low Attendance)"
+      },
+      {
+        "step": 2,
+        "node_id": "node-1",
+        "node_name": "Low Attendance Internal Split",
+        "type": "split",
+        "feature": "Internal Assessment Marks (0-50)",
+        "decision_detail": "Internal Marks (28.0/50) > 22.0/50 \u2794 Branching RIGHT (Evaluate Study Hours)"
+      },
+      {
+        "step": 3,
+        "node_id": "node-4",
+        "node_name": "Low Attendance Study Time Split",
+        "type": "split",
+        "feature": "Weekly Study Hours",
+        "decision_detail": "Study Hours (8.0 h/wk) \u2264 9.0 h/wk \u2794 Branching LEFT (Study Deficit)"
+      },
+      {
+        "step": 4,
+        "node_id": "node-9",
+        "node_name": "Study Deficit Leaf",
+        "type": "leaf",
+        "outcome": "Fail",
+        "confidence": 75.0,
+        "explanation": "Low attendance (\u226480%) combined with insufficient study hours (\u22649h) leads to academic failure."
+      }
+    ]
+  },
+  {
+    "id": "PRED-1785860336",
+    "student_id": "STU-1001",
+    "timestamp": "2026-08-04 16:18:56",
+    "inputs": {
+      "student_id": "STU-1001",
+      "gender": "Male",
+      "age": 20,
+      "attendance": 65.0,
+      "study_hours": 10.0,
+      "internal_marks": 30.0,
+      "previous_grade": "B",
+      "absences": 3
+    },
+    "outcome": "Pass",
+    "confidence": 89.5,
+    "pass_probability": 89.5,
+    "fail_probability": 10.5,
+    "recommendations": [
+      {
+        "type": "danger",
+        "title": "High Attendance Risk",
+        "rule": "Attendance < 75%",
+        "text": "Current attendance is 65.0%. Mandatory attendance counseling and class catch-up sessions required."
+      }
+    ],
+    "decision_steps": [
+      {
+        "step": 1,
+        "node_id": "node-0",
+        "node_name": "Attendance Split",
+        "type": "split",
+        "feature": "Attendance Rate (%)",
+        "decision_detail": "Attendance (65.0%) \u2264 80.0% \u2794 Branching LEFT (Low Attendance)"
+      },
+      {
+        "step": 2,
+        "node_id": "node-1",
+        "node_name": "Low Attendance Internal Split",
+        "type": "split",
+        "feature": "Internal Assessment Marks (0-50)",
+        "decision_detail": "Internal Marks (30.0/50) > 22.0/50 \u2794 Branching RIGHT (Evaluate Study Hours)"
+      },
+      {
+        "step": 3,
+        "node_id": "node-4",
+        "node_name": "Low Attendance Study Time Split",
+        "type": "split",
+        "feature": "Weekly Study Hours",
+        "decision_detail": "Study Hours (10.0 h/wk) > 9.0 h/wk \u2794 Branching RIGHT (Study Recovery)"
+      },
+      {
+        "step": 4,
+        "node_id": "node-10",
+        "node_name": "Study Effort Recovery Leaf",
+        "type": "leaf",
+        "outcome": "Pass",
+        "confidence": 89.5,
+        "explanation": "High study hours (>9h) and decent internal marks compensate for low attendance."
+      }
+    ]
+  },
+  {
+    "id": "PRED-1785860317",
+    "student_id": "STU-1001",
+    "timestamp": "2026-08-04 16:18:37",
+    "inputs": {
+      "student_id": "STU-1001",
+      "gender": "Male",
+      "age": 20,
+      "attendance": 80.0,
+      "study_hours": 10.0,
+      "internal_marks": 30.0,
+      "previous_grade": "B",
+      "absences": 3
+    },
+    "outcome": "Pass",
+    "confidence": 89.5,
+    "pass_probability": 89.5,
+    "fail_probability": 10.5,
+    "recommendations": [
+      {
+        "type": "success",
+        "title": "Optimal Academic Profile",
+        "rule": "All Metrics Nominal",
+        "text": "Student demonstrates steady study habits, high attendance, and healthy assessment marks."
+      }
+    ],
+    "decision_steps": [
+      {
+        "step": 1,
+        "node_id": "node-0",
+        "node_name": "Attendance Split",
+        "type": "split",
+        "feature": "Attendance Rate (%)",
+        "decision_detail": "Attendance (80.0%) \u2264 80.0% \u2794 Branching LEFT (Low Attendance)"
+      },
+      {
+        "step": 2,
+        "node_id": "node-1",
+        "node_name": "Low Attendance Internal Split",
+        "type": "split",
+        "feature": "Internal Assessment Marks (0-50)",
+        "decision_detail": "Internal Marks (30.0/50) > 22.0/50 \u2794 Branching RIGHT (Evaluate Study Hours)"
+      },
+      {
+        "step": 3,
+        "node_id": "node-4",
+        "node_name": "Low Attendance Study Time Split",
+        "type": "split",
+        "feature": "Weekly Study Hours",
+        "decision_detail": "Study Hours (10.0 h/wk) > 9.0 h/wk \u2794 Branching RIGHT (Study Recovery)"
+      },
+      {
+        "step": 4,
+        "node_id": "node-10",
+        "node_name": "Study Effort Recovery Leaf",
+        "type": "leaf",
+        "outcome": "Pass",
+        "confidence": 89.5,
+        "explanation": "High study hours (>9h) and decent internal marks compensate for low attendance."
+      }
+    ]
+  },
+  {
+    "id": "PRED-1785860296",
+    "student_id": "STU-1001",
+    "timestamp": "2026-08-04 16:18:16",
+    "inputs": {
+      "student_id": "STU-1001",
+      "gender": "Male",
+      "age": 20,
+      "attendance": 45.0,
+      "study_hours": 6.0,
+      "internal_marks": 30.0,
+      "previous_grade": "B",
+      "absences": 3
+    },
+    "outcome": "Fail",
+    "confidence": 75.0,
+    "pass_probability": 25.0,
+    "fail_probability": 75.0,
+    "recommendations": [
+      {
+        "type": "danger",
+        "title": "High Attendance Risk",
+        "rule": "Attendance < 75%",
+        "text": "Current attendance is 45.0%. Mandatory attendance counseling and class catch-up sessions required."
+      },
+      {
+        "type": "warning",
+        "title": "Study Hours Deficit",
+        "rule": "Study Hours < 10 hrs/wk",
+        "text": "Weekly self-study is only 6.0 hrs/wk. Increase structured study time to at least 12\u201315 hours weekly."
+      }
+    ],
+    "decision_steps": [
+      {
+        "step": 1,
+        "node_id": "node-0",
+        "node_name": "Attendance Split",
+        "type": "split",
+        "feature": "Attendance Rate (%)",
+        "decision_detail": "Attendance (45.0%) \u2264 80.0% \u2794 Branching LEFT (Low Attendance)"
+      },
+      {
+        "step": 2,
+        "node_id": "node-1",
+        "node_name": "Low Attendance Internal Split",
+        "type": "split",
+        "feature": "Internal Assessment Marks (0-50)",
+        "decision_detail": "Internal Marks (30.0/50) > 22.0/50 \u2794 Branching RIGHT (Evaluate Study Hours)"
+      },
+      {
+        "step": 3,
+        "node_id": "node-4",
+        "node_name": "Low Attendance Study Time Split",
+        "type": "split",
+        "feature": "Weekly Study Hours",
+        "decision_detail": "Study Hours (6.0 h/wk) \u2264 9.0 h/wk \u2794 Branching LEFT (Study Deficit)"
+      },
+      {
+        "step": 4,
+        "node_id": "node-9",
+        "node_name": "Study Deficit Leaf",
+        "type": "leaf",
+        "outcome": "Fail",
+        "confidence": 75.0,
+        "explanation": "Low attendance (\u226480%) combined with insufficient study hours (\u22649h) leads to academic failure."
+      }
+    ]
+  },
+  {
+    "id": "PRED-1785860263",
+    "student_id": "41009",
+    "timestamp": "2026-08-04 16:17:43",
+    "inputs": {
+      "student_id": "41009",
+      "gender": "Female",
+      "age": 22,
+      "attendance": 65.0,
+      "study_hours": 9.0,
+      "internal_marks": 30.0,
+      "previous_grade": "C",
+      "absences": 5
+    },
+    "outcome": "Fail",
+    "confidence": 75.0,
+    "pass_probability": 25.0,
+    "fail_probability": 75.0,
+    "recommendations": [
+      {
+        "type": "danger",
+        "title": "High Attendance Risk",
+        "rule": "Attendance < 75%",
+        "text": "Current attendance is 65.0%. Mandatory attendance counseling and class catch-up sessions required."
+      },
+      {
+        "type": "warning",
+        "title": "Study Hours Deficit",
+        "rule": "Study Hours < 10 hrs/wk",
+        "text": "Weekly self-study is only 9.0 hrs/wk. Increase structured study time to at least 12\u201315 hours weekly."
+      }
+    ],
+    "decision_steps": [
+      {
+        "step": 1,
+        "node_id": "node-0",
+        "node_name": "Attendance Split",
+        "type": "split",
+        "feature": "Attendance Rate (%)",
+        "decision_detail": "Attendance (65.0%) \u2264 80.0% \u2794 Branching LEFT (Low Attendance)"
+      },
+      {
+        "step": 2,
+        "node_id": "node-1",
+        "node_name": "Low Attendance Internal Split",
+        "type": "split",
+        "feature": "Internal Assessment Marks (0-50)",
+        "decision_detail": "Internal Marks (30.0/50) > 22.0/50 \u2794 Branching RIGHT (Evaluate Study Hours)"
+      },
+      {
+        "step": 3,
+        "node_id": "node-4",
+        "node_name": "Low Attendance Study Time Split",
+        "type": "split",
+        "feature": "Weekly Study Hours",
+        "decision_detail": "Study Hours (9.0 h/wk) \u2264 9.0 h/wk \u2794 Branching LEFT (Study Deficit)"
+      },
+      {
+        "step": 4,
+        "node_id": "node-9",
+        "node_name": "Study Deficit Leaf",
+        "type": "leaf",
+        "outcome": "Fail",
+        "confidence": 75.0,
+        "explanation": "Low attendance (\u226480%) combined with insufficient study hours (\u22649h) leads to academic failure."
+      }
+    ]
+  },
+  {
+    "id": "PRED-1785860248",
+    "student_id": "41009",
+    "timestamp": "2026-08-04 16:17:28",
+    "inputs": {
+      "student_id": "41009",
+      "gender": "Female",
+      "age": 22,
+      "attendance": 65.0,
+      "study_hours": 10.0,
+      "internal_marks": 24.0,
+      "previous_grade": "C",
+      "absences": 5
+    },
+    "outcome": "Pass",
+    "confidence": 89.5,
+    "pass_probability": 89.5,
+    "fail_probability": 10.5,
+    "recommendations": [
+      {
+        "type": "danger",
+        "title": "High Attendance Risk",
+        "rule": "Attendance < 75%",
+        "text": "Current attendance is 65.0%. Mandatory attendance counseling and class catch-up sessions required."
+      }
+    ],
+    "decision_steps": [
+      {
+        "step": 1,
+        "node_id": "node-0",
+        "node_name": "Attendance Split",
+        "type": "split",
+        "feature": "Attendance Rate (%)",
+        "decision_detail": "Attendance (65.0%) \u2264 80.0% \u2794 Branching LEFT (Low Attendance)"
+      },
+      {
+        "step": 2,
+        "node_id": "node-1",
+        "node_name": "Low Attendance Internal Split",
+        "type": "split",
+        "feature": "Internal Assessment Marks (0-50)",
+        "decision_detail": "Internal Marks (24.0/50) > 22.0/50 \u2794 Branching RIGHT (Evaluate Study Hours)"
+      },
+      {
+        "step": 3,
+        "node_id": "node-4",
+        "node_name": "Low Attendance Study Time Split",
+        "type": "split",
+        "feature": "Weekly Study Hours",
+        "decision_detail": "Study Hours (10.0 h/wk) > 9.0 h/wk \u2794 Branching RIGHT (Study Recovery)"
+      },
+      {
+        "step": 4,
+        "node_id": "node-10",
+        "node_name": "Study Effort Recovery Leaf",
+        "type": "leaf",
+        "outcome": "Pass",
+        "confidence": 89.5,
+        "explanation": "High study hours (>9h) and decent internal marks compensate for low attendance."
+      }
+    ]
+  },
+  {
+    "id": "PRED-1785860239",
+    "student_id": "41009",
+    "timestamp": "2026-08-04 16:17:19",
+    "inputs": {
+      "student_id": "41009",
+      "gender": "Female",
+      "age": 22,
+      "attendance": 65.0,
+      "study_hours": 9.0,
+      "internal_marks": 24.0,
+      "previous_grade": "C",
+      "absences": 5
+    },
+    "outcome": "Fail",
+    "confidence": 75.0,
+    "pass_probability": 25.0,
+    "fail_probability": 75.0,
+    "recommendations": [
+      {
+        "type": "danger",
+        "title": "High Attendance Risk",
+        "rule": "Attendance < 75%",
+        "text": "Current attendance is 65.0%. Mandatory attendance counseling and class catch-up sessions required."
+      },
+      {
+        "type": "warning",
+        "title": "Study Hours Deficit",
+        "rule": "Study Hours < 10 hrs/wk",
+        "text": "Weekly self-study is only 9.0 hrs/wk. Increase structured study time to at least 12\u201315 hours weekly."
+      }
+    ],
+    "decision_steps": [
+      {
+        "step": 1,
+        "node_id": "node-0",
+        "node_name": "Attendance Split",
+        "type": "split",
+        "feature": "Attendance Rate (%)",
+        "decision_detail": "Attendance (65.0%) \u2264 80.0% \u2794 Branching LEFT (Low Attendance)"
+      },
+      {
+        "step": 2,
+        "node_id": "node-1",
+        "node_name": "Low Attendance Internal Split",
+        "type": "split",
+        "feature": "Internal Assessment Marks (0-50)",
+        "decision_detail": "Internal Marks (24.0/50) > 22.0/50 \u2794 Branching RIGHT (Evaluate Study Hours)"
+      },
+      {
+        "step": 3,
+        "node_id": "node-4",
+        "node_name": "Low Attendance Study Time Split",
+        "type": "split",
+        "feature": "Weekly Study Hours",
+        "decision_detail": "Study Hours (9.0 h/wk) \u2264 9.0 h/wk \u2794 Branching LEFT (Study Deficit)"
+      },
+      {
+        "step": 4,
+        "node_id": "node-9",
+        "node_name": "Study Deficit Leaf",
+        "type": "leaf",
+        "outcome": "Fail",
+        "confidence": 75.0,
+        "explanation": "Low attendance (\u226480%) combined with insufficient study hours (\u22649h) leads to academic failure."
+      }
+    ]
+  },
+  {
+    "id": "PRED-1785860232",
+    "student_id": "41009",
+    "timestamp": "2026-08-04 16:17:12",
+    "inputs": {
+      "student_id": "41009",
+      "gender": "Female",
+      "age": 22,
+      "attendance": 65.0,
+      "study_hours": 6.0,
+      "internal_marks": 24.0,
+      "previous_grade": "C",
+      "absences": 5
+    },
+    "outcome": "Fail",
+    "confidence": 75.0,
+    "pass_probability": 25.0,
+    "fail_probability": 75.0,
+    "recommendations": [
+      {
+        "type": "danger",
+        "title": "High Attendance Risk",
+        "rule": "Attendance < 75%",
+        "text": "Current attendance is 65.0%. Mandatory attendance counseling and class catch-up sessions required."
+      },
+      {
+        "type": "warning",
+        "title": "Study Hours Deficit",
+        "rule": "Study Hours < 10 hrs/wk",
+        "text": "Weekly self-study is only 6.0 hrs/wk. Increase structured study time to at least 12\u201315 hours weekly."
+      }
+    ],
+    "decision_steps": [
+      {
+        "step": 1,
+        "node_id": "node-0",
+        "node_name": "Attendance Split",
+        "type": "split",
+        "feature": "Attendance Rate (%)",
+        "decision_detail": "Attendance (65.0%) \u2264 80.0% \u2794 Branching LEFT (Low Attendance)"
+      },
+      {
+        "step": 2,
+        "node_id": "node-1",
+        "node_name": "Low Attendance Internal Split",
+        "type": "split",
+        "feature": "Internal Assessment Marks (0-50)",
+        "decision_detail": "Internal Marks (24.0/50) > 22.0/50 \u2794 Branching RIGHT (Evaluate Study Hours)"
+      },
+      {
+        "step": 3,
+        "node_id": "node-4",
+        "node_name": "Low Attendance Study Time Split",
+        "type": "split",
+        "feature": "Weekly Study Hours",
+        "decision_detail": "Study Hours (6.0 h/wk) \u2264 9.0 h/wk \u2794 Branching LEFT (Study Deficit)"
+      },
+      {
+        "step": 4,
+        "node_id": "node-9",
+        "node_name": "Study Deficit Leaf",
+        "type": "leaf",
+        "outcome": "Fail",
+        "confidence": 75.0,
+        "explanation": "Low attendance (\u226480%) combined with insufficient study hours (\u22649h) leads to academic failure."
+      }
+    ]
+  },
+  {
+    "id": "PRED-1785860225",
+    "student_id": "41009",
+    "timestamp": "2026-08-04 16:17:05",
+    "inputs": {
+      "student_id": "41009",
+      "gender": "Female",
+      "age": 22,
+      "attendance": 65.0,
+      "study_hours": 3.0,
+      "internal_marks": 24.0,
+      "previous_grade": "C",
+      "absences": 5
+    },
+    "outcome": "Fail",
+    "confidence": 75.0,
+    "pass_probability": 25.0,
+    "fail_probability": 75.0,
+    "recommendations": [
+      {
+        "type": "danger",
+        "title": "High Attendance Risk",
+        "rule": "Attendance < 75%",
+        "text": "Current attendance is 65.0%. Mandatory attendance counseling and class catch-up sessions required."
+      },
+      {
+        "type": "warning",
+        "title": "Study Hours Deficit",
+        "rule": "Study Hours < 10 hrs/wk",
+        "text": "Weekly self-study is only 3.0 hrs/wk. Increase structured study time to at least 12\u201315 hours weekly."
+      }
+    ],
+    "decision_steps": [
+      {
+        "step": 1,
+        "node_id": "node-0",
+        "node_name": "Attendance Split",
+        "type": "split",
+        "feature": "Attendance Rate (%)",
+        "decision_detail": "Attendance (65.0%) \u2264 80.0% \u2794 Branching LEFT (Low Attendance)"
+      },
+      {
+        "step": 2,
+        "node_id": "node-1",
+        "node_name": "Low Attendance Internal Split",
+        "type": "split",
+        "feature": "Internal Assessment Marks (0-50)",
+        "decision_detail": "Internal Marks (24.0/50) > 22.0/50 \u2794 Branching RIGHT (Evaluate Study Hours)"
+      },
+      {
+        "step": 3,
+        "node_id": "node-4",
+        "node_name": "Low Attendance Study Time Split",
+        "type": "split",
+        "feature": "Weekly Study Hours",
+        "decision_detail": "Study Hours (3.0 h/wk) \u2264 9.0 h/wk \u2794 Branching LEFT (Study Deficit)"
+      },
+      {
+        "step": 4,
+        "node_id": "node-9",
+        "node_name": "Study Deficit Leaf",
+        "type": "leaf",
+        "outcome": "Fail",
+        "confidence": 75.0,
+        "explanation": "Low attendance (\u226480%) combined with insufficient study hours (\u22649h) leads to academic failure."
+      }
+    ]
+  },
+  {
+    "id": "PRED-1785860212",
+    "student_id": "41009",
+    "timestamp": "2026-08-04 16:16:52",
+    "inputs": {
+      "student_id": "41009",
+      "gender": "Female",
+      "age": 22,
+      "attendance": 65.0,
+      "study_hours": 10.0,
+      "internal_marks": 24.0,
+      "previous_grade": "C",
+      "absences": 5
+    },
+    "outcome": "Pass",
+    "confidence": 89.5,
+    "pass_probability": 89.5,
+    "fail_probability": 10.5,
+    "recommendations": [
+      {
+        "type": "danger",
+        "title": "High Attendance Risk",
+        "rule": "Attendance < 75%",
+        "text": "Current attendance is 65.0%. Mandatory attendance counseling and class catch-up sessions required."
+      }
+    ],
+    "decision_steps": [
+      {
+        "step": 1,
+        "node_id": "node-0",
+        "node_name": "Attendance Split",
+        "type": "split",
+        "feature": "Attendance Rate (%)",
+        "decision_detail": "Attendance (65.0%) \u2264 80.0% \u2794 Branching LEFT (Low Attendance)"
+      },
+      {
+        "step": 2,
+        "node_id": "node-1",
+        "node_name": "Low Attendance Internal Split",
+        "type": "split",
+        "feature": "Internal Assessment Marks (0-50)",
+        "decision_detail": "Internal Marks (24.0/50) > 22.0/50 \u2794 Branching RIGHT (Evaluate Study Hours)"
+      },
+      {
+        "step": 3,
+        "node_id": "node-4",
+        "node_name": "Low Attendance Study Time Split",
+        "type": "split",
+        "feature": "Weekly Study Hours",
+        "decision_detail": "Study Hours (10.0 h/wk) > 9.0 h/wk \u2794 Branching RIGHT (Study Recovery)"
+      },
+      {
+        "step": 4,
+        "node_id": "node-10",
+        "node_name": "Study Effort Recovery Leaf",
+        "type": "leaf",
+        "outcome": "Pass",
+        "confidence": 89.5,
+        "explanation": "High study hours (>9h) and decent internal marks compensate for low attendance."
+      }
+    ]
+  },
+  {
+    "id": "PRED-1785860190",
+    "student_id": "41009",
+    "timestamp": "2026-08-04 16:16:30",
+    "inputs": {
+      "student_id": "41009",
+      "gender": "Female",
+      "age": 22,
+      "attendance": 85.0,
+      "study_hours": 10.0,
+      "internal_marks": 24.0,
+      "previous_grade": "C",
+      "absences": 5
+    },
+    "outcome": "Pass",
+    "confidence": 97.8,
+    "pass_probability": 97.8,
+    "fail_probability": 2.2,
+    "recommendations": [
+      {
+        "type": "success",
+        "title": "Strong Attendance Record",
+        "rule": "Attendance \u2265 85%",
+        "text": "Excellent attendance rate at 85.0%. Continue maintaining high classroom engagement."
+      }
+    ],
+    "decision_steps": [
+      {
+        "step": 1,
+        "node_id": "node-0",
+        "node_name": "Attendance Split",
+        "type": "split",
+        "feature": "Attendance Rate (%)",
+        "decision_detail": "Attendance (85.0%) > 80.0% \u2794 Branching RIGHT (Sufficient Attendance)"
+      },
+      {
+        "step": 2,
+        "node_id": "node-2",
+        "node_name": "Good Attendance Internal Split",
+        "type": "split",
+        "feature": "Internal Assessment Marks (0-50)",
+        "decision_detail": "Internal Marks (24.0/50) \u2264 28.0/50 \u2794 Branching LEFT (Evaluate Absences)"
+      },
+      {
+        "step": 3,
+        "node_id": "node-5",
+        "node_name": "Absences Split",
+        "type": "split",
+        "feature": "Unexcused Absences",
+        "decision_detail": "Absences (5 days) \u2264 6 days \u2794 Branching LEFT (Evaluate Study Hours)"
+      },
+      {
+        "step": 4,
+        "node_id": "node-11",
+        "node_name": "Study Hours Evaluation",
+        "type": "split",
+        "feature": "Weekly Study Hours",
+        "decision_detail": "Study Hours (10.0 h/wk) > 7.5 h/wk \u2794 Branching RIGHT (Consistent Effort)"
+      },
+      {
+        "step": 5,
+        "node_id": "node-18",
+        "node_name": "Consistent Effort Leaf",
+        "type": "leaf",
+        "outcome": "Pass",
+        "confidence": 97.8,
+        "explanation": "Good attendance and steady study effort yield a 97.8% pass rate."
+      }
+    ]
+  },
+  {
+    "id": "PRED-1785860175",
+    "student_id": "41009",
+    "timestamp": "2026-08-04 16:16:15",
+    "inputs": {
+      "student_id": "41009",
+      "gender": "Female",
+      "age": 22,
+      "attendance": 85.0,
+      "study_hours": 10.0,
+      "internal_marks": 29.0,
+      "previous_grade": "C",
+      "absences": 5
+    },
+    "outcome": "Pass",
+    "confidence": 97.8,
+    "pass_probability": 97.8,
+    "fail_probability": 2.2,
+    "recommendations": [
+      {
+        "type": "success",
+        "title": "Strong Attendance Record",
+        "rule": "Attendance \u2265 85%",
+        "text": "Excellent attendance rate at 85.0%. Continue maintaining high classroom engagement."
+      }
+    ],
+    "decision_steps": [
+      {
+        "step": 1,
+        "node_id": "node-0",
+        "node_name": "Attendance Split",
+        "type": "split",
+        "feature": "Attendance Rate (%)",
+        "decision_detail": "Attendance (85.0%) > 80.0% \u2794 Branching RIGHT (Sufficient Attendance)"
+      },
+      {
+        "step": 2,
+        "node_id": "node-2",
+        "node_name": "Good Attendance Internal Split",
+        "type": "split",
+        "feature": "Internal Assessment Marks (0-50)",
+        "decision_detail": "Internal Marks (29.0/50) > 28.0/50 \u2794 Branching RIGHT (Evaluate Previous Grade)"
+      },
+      {
+        "step": 3,
+        "node_id": "node-6",
+        "node_name": "Previous Academic Grade Split",
+        "type": "split",
+        "feature": "Previous Academic Standing",
+        "decision_detail": "Previous Grade (C) is in {A, B, C} \u2794 Branching RIGHT (High Performer)"
+      },
+      {
+        "step": 4,
+        "node_id": "node-14",
+        "node_name": "High Academic Standing Leaf",
+        "type": "leaf",
+        "outcome": "Pass",
+        "confidence": 97.8,
+        "explanation": "Optimal academic profile: Strong attendance, high internal marks (>28/50), and past grade A/B/C."
+      }
+    ]
+  },
+  {
+    "id": "PRED-1785859041",
+    "student_id": "STU-1001",
+    "timestamp": "2026-08-04 15:57:21",
+    "inputs": {
+      "student_id": "STU-1001",
+      "gender": "Male",
+      "age": 20,
+      "attendance": 80.0,
+      "study_hours": 10.0,
+      "internal_marks": 30.0,
+      "previous_grade": "B",
+      "absences": 3
+    },
+    "outcome": "Pass",
+    "confidence": 89.5,
+    "pass_probability": 89.5,
+    "fail_probability": 10.5,
+    "recommendations": [
+      {
+        "type": "success",
+        "title": "Optimal Academic Profile",
+        "rule": "All Metrics Nominal",
+        "text": "Student demonstrates steady study habits, high attendance, and healthy assessment marks."
+      }
+    ],
+    "decision_steps": [
+      {
+        "step": 1,
+        "node_id": "node-0",
+        "node_name": "Attendance Split",
+        "type": "split",
+        "feature": "Attendance Rate (%)",
+        "decision_detail": "Attendance (80.0%) \u2264 80.0% \u2794 Branching LEFT (Low Attendance)"
+      },
+      {
+        "step": 2,
+        "node_id": "node-1",
+        "node_name": "Low Attendance Internal Split",
+        "type": "split",
+        "feature": "Internal Assessment Marks (0-50)",
+        "decision_detail": "Internal Marks (30.0/50) > 22.0/50 \u2794 Branching RIGHT (Evaluate Study Hours)"
+      },
+      {
+        "step": 3,
+        "node_id": "node-4",
+        "node_name": "Low Attendance Study Time Split",
+        "type": "split",
+        "feature": "Weekly Study Hours",
+        "decision_detail": "Study Hours (10.0 h/wk) > 9.0 h/wk \u2794 Branching RIGHT (Study Recovery)"
+      },
+      {
+        "step": 4,
+        "node_id": "node-10",
+        "node_name": "Study Effort Recovery Leaf",
+        "type": "leaf",
+        "outcome": "Pass",
+        "confidence": 89.5,
+        "explanation": "High study hours (>9h) and decent internal marks compensate for low attendance."
+      }
+    ]
+  },
+  {
+    "id": "PRED-1785858688",
+    "student_id": "RN1001",
+    "timestamp": "2026-08-04 15:51:28",
+    "inputs": {
+      "student_id": "RN1001",
+      "gender": "Male",
+      "age": 23,
+      "attendance": 75.0,
+      "study_hours": 8.0,
+      "internal_marks": 28.0,
+      "previous_grade": "B",
+      "absences": 3
+    },
+    "outcome": "Pass",
+    "confidence": 98.0,
+    "pass_probability": 98.0,
+    "fail_probability": 2.0,
+    "recommendations": [
+      {
+        "type": "warning",
+        "title": "Study Hours Deficit",
+        "rule": "Study Hours < 10 hrs/wk",
+        "text": "Weekly self-study is only 8.0 hrs/wk. Increase structured study time to at least 12\u201315 hours weekly."
+      }
+    ],
+    "decision_steps": [
+      {
+        "step": 1,
+        "node_id": "node-0",
+        "node_name": "Attendance Split",
+        "type": "split",
+        "feature": "Attendance Rate (%)",
+        "decision_detail": "Attendance (75.0%) \u2264 80.0% \u2794 Branching LEFT (Low Attendance)"
+      },
+      {
+        "step": 2,
+        "node_id": "node-1",
+        "node_name": "Low Attendance Internal Split",
+        "type": "split",
+        "feature": "Internal Assessment Marks (0-50)",
+        "decision_detail": "Internal Marks (28.0/50) > 22.0/50 \u2794 Branching RIGHT (Evaluate Study Hours)"
+      },
+      {
+        "step": 3,
+        "node_id": "node-4",
+        "node_name": "Low Attendance Study Time Split",
+        "type": "split",
+        "feature": "Weekly Study Hours",
+        "decision_detail": "Study Hours (8.0 h/wk) \u2264 9.0 h/wk \u2794 Branching LEFT (Study Deficit)"
+      },
+      {
+        "step": 4,
+        "node_id": "node-9",
+        "node_name": "Study Deficit Leaf",
+        "type": "leaf",
+        "outcome": "Fail",
+        "confidence": 75.0,
+        "explanation": "Low attendance (\u226480%) combined with insufficient study hours (\u22649h) leads to academic failure."
+      }
+    ]
+  },
+  {
+    "id": "PRED-1785856818",
+    "student_id": "RT-1203",
+    "timestamp": "2026-08-04 15:20:18",
+    "inputs": {
+      "student_id": "RT-1203",
+      "gender": "Male",
+      "age": 20,
+      "attendance": 75.0,
+      "study_hours": 12.0,
+      "internal_marks": 27.0,
+      "previous_grade": "C",
+      "absences": 4
+    },
+    "outcome": "Pass",
+    "confidence": 98.0,
+    "pass_probability": 98.0,
+    "fail_probability": 2.0,
+    "recommendations": [
+      {
+        "type": "success",
+        "title": "Optimal Academic Profile",
+        "rule": "All Metrics Nominal",
+        "text": "Student demonstrates steady study habits, high attendance, and healthy assessment marks."
+      }
+    ],
+    "decision_steps": [
+      {
+        "step": 1,
+        "node_id": "node-0",
+        "node_name": "Attendance Split",
+        "type": "split",
+        "feature": "Attendance Rate (%)",
+        "decision_detail": "Attendance (75.0%) \u2264 80.0% \u2794 Branching LEFT (Low Attendance)"
+      },
+      {
+        "step": 2,
+        "node_id": "node-1",
+        "node_name": "Low Attendance Internal Split",
+        "type": "split",
+        "feature": "Internal Assessment Marks (0-50)",
+        "decision_detail": "Internal Marks (27.0/50) > 22.0/50 \u2794 Branching RIGHT (Evaluate Study Hours)"
+      },
+      {
+        "step": 3,
+        "node_id": "node-4",
+        "node_name": "Low Attendance Study Time Split",
+        "type": "split",
+        "feature": "Weekly Study Hours",
+        "decision_detail": "Study Hours (12.0 h/wk) > 9.0 h/wk \u2794 Branching RIGHT (Study Recovery)"
+      },
+      {
+        "step": 4,
+        "node_id": "node-10",
+        "node_name": "Study Effort Recovery Leaf",
+        "type": "leaf",
+        "outcome": "Pass",
+        "confidence": 89.5,
+        "explanation": "High study hours (>9h) and decent internal marks compensate for low attendance."
+      }
+    ]
+  },
+  {
     "id": "PRED-1785741302771",
     "timestamp": "2026-08-03 07:15:02",
     "inputs": {
@@ -19,13 +987,13 @@
       {
         "type": "success",
         "title": "Strong Attendance Record",
-        "rule": "Attendance ≥ 85%",
+        "rule": "Attendance \u2265 85%",
         "text": "Excellent attendance rate at 85%. Continue maintaining high classroom engagement."
       },
       {
         "type": "success",
         "title": "Solid Internal Assessment",
-        "rule": "Internal Marks ≥ 35 / 50",
+        "rule": "Internal Marks \u2265 35 / 50",
         "text": "Good internal score (38/50). Keep up the study momentum for final exams."
       }
     ]
@@ -50,13 +1018,13 @@
       {
         "type": "success",
         "title": "Strong Attendance Record",
-        "rule": "Attendance ≥ 85%",
+        "rule": "Attendance \u2265 85%",
         "text": "Excellent attendance rate at 85.5%. Continue maintaining high classroom engagement."
       },
       {
         "type": "success",
         "title": "Solid Internal Assessment",
-        "rule": "Internal Marks ≥ 35 / 50",
+        "rule": "Internal Marks \u2265 35 / 50",
         "text": "Good internal score (38.0/50). Keep up the study momentum for final exams."
       }
     ]
@@ -88,7 +1056,7 @@
         "type": "warning",
         "title": "Study Hours Deficit",
         "rule": "Study Hours < 10 hrs/wk",
-        "text": "Weekly self-study is only 8.0 hrs/wk. Increase structured study time to at least 12–15 hours weekly."
+        "text": "Weekly self-study is only 8.0 hrs/wk. Increase structured study time to at least 12\u201315 hours weekly."
       }
     ]
   },
@@ -112,13 +1080,13 @@
       {
         "type": "success",
         "title": "Strong Attendance Record",
-        "rule": "Attendance ≥ 85%",
+        "rule": "Attendance \u2265 85%",
         "text": "Excellent attendance rate at 100.0%. Continue maintaining high classroom engagement."
       },
       {
         "type": "success",
         "title": "Solid Internal Assessment",
-        "rule": "Internal Marks ≥ 35 / 50",
+        "rule": "Internal Marks \u2265 35 / 50",
         "text": "Good internal score (41.0/50). Keep up the study momentum for final exams."
       }
     ]
@@ -143,7 +1111,7 @@
       {
         "type": "success",
         "title": "Strong Attendance Record",
-        "rule": "Attendance ≥ 85%",
+        "rule": "Attendance \u2265 85%",
         "text": "Excellent attendance rate at 100.0%. Continue maintaining high classroom engagement."
       }
     ]
@@ -168,14 +1136,14 @@
       {
         "type": "success",
         "title": "Strong Attendance Record",
-        "rule": "Attendance ≥ 85%",
+        "rule": "Attendance \u2265 85%",
         "text": "Excellent attendance rate at 100.0%. Continue maintaining high classroom engagement."
       },
       {
         "type": "warning",
         "title": "Study Hours Deficit",
         "rule": "Study Hours < 10 hrs/wk",
-        "text": "Weekly self-study is only 3.0 hrs/wk. Increase structured study time to at least 12–15 hours weekly."
+        "text": "Weekly self-study is only 3.0 hrs/wk. Increase structured study time to at least 12\u201315 hours weekly."
       }
     ]
   },
@@ -199,14 +1167,14 @@
       {
         "type": "success",
         "title": "Strong Attendance Record",
-        "rule": "Attendance ≥ 85%",
+        "rule": "Attendance \u2265 85%",
         "text": "Excellent attendance rate at 100.0%. Continue maintaining high classroom engagement."
       },
       {
         "type": "warning",
         "title": "Study Hours Deficit",
         "rule": "Study Hours < 10 hrs/wk",
-        "text": "Weekly self-study is only 3.0 hrs/wk. Increase structured study time to at least 12–15 hours weekly."
+        "text": "Weekly self-study is only 3.0 hrs/wk. Increase structured study time to at least 12\u201315 hours weekly."
       }
     ]
   },
@@ -230,14 +1198,14 @@
       {
         "type": "success",
         "title": "Strong Attendance Record",
-        "rule": "Attendance ≥ 85%",
+        "rule": "Attendance \u2265 85%",
         "text": "Excellent attendance rate at 100.0%. Continue maintaining high classroom engagement."
       },
       {
         "type": "warning",
         "title": "Study Hours Deficit",
         "rule": "Study Hours < 10 hrs/wk",
-        "text": "Weekly self-study is only 3.0 hrs/wk. Increase structured study time to at least 12–15 hours weekly."
+        "text": "Weekly self-study is only 3.0 hrs/wk. Increase structured study time to at least 12\u201315 hours weekly."
       }
     ]
   },
@@ -343,7 +1311,7 @@
         "type": "warning",
         "title": "Study Hours Deficit",
         "rule": "Study Hours < 10 hrs/wk",
-        "text": "Weekly self-study is only 4.5 hrs/wk. Increase structured study time to at least 12–15 hours weekly."
+        "text": "Weekly self-study is only 4.5 hrs/wk. Increase structured study time to at least 12\u201315 hours weekly."
       }
     ]
   },
@@ -374,7 +1342,7 @@
         "type": "warning",
         "title": "Study Hours Deficit",
         "rule": "Study Hours < 10 hrs/wk",
-        "text": "Weekly self-study is only 4.0 hrs/wk. Increase structured study time to at least 12–15 hours weekly."
+        "text": "Weekly self-study is only 4.0 hrs/wk. Increase structured study time to at least 12\u201315 hours weekly."
       },
       {
         "type": "warning",

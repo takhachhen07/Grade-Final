@@ -37,7 +37,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const submitBtn = uploadForm.querySelector('button[type="submit"]');
 
       submitBtn.disabled = true;
-      submitBtn.innerHTML = 'Uploading & Retraining...';
+      submitBtn.innerHTML = 'Uploading & Importing...';
 
       try {
         const response = await fetch('/api/upload-csv', {
@@ -56,30 +56,8 @@ document.addEventListener('DOMContentLoaded', () => {
         alert('Network error: ' + err.message);
       } finally {
         submitBtn.disabled = false;
-        submitBtn.innerHTML = '<i class="fa-solid fa-upload"></i> Upload & Retrain Model';
+        submitBtn.innerHTML = '<i class="fa-solid fa-upload"></i> Upload & Import to ODS';
       }
     });
   }
-
-  // Handle Clear Transaction Log
-  const clearHistoryBtn = document.getElementById('clear-history-btn');
-  if (clearHistoryBtn) {
-    clearHistoryBtn.addEventListener('click', async () => {
-      if (!confirm('Are you sure you want to clear all prediction history?')) return;
-
-      try {
-        const response = await fetch('/api/prediction-overview', { method: 'DELETE' });
-        const result = await response.json();
-
-        if (result.success) {
-          alert(result.message);
-          window.location.reload();
-        }
-      } catch (err) {
-        alert('Error clearing history: ' + err.message);
-      }
-    });
-  }
-
-  // Navigation & Client Utilities initialized
 });
